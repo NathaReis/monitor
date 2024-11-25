@@ -1,0 +1,24 @@
+{
+  "name": "monitor",
+  "version": "1.0.0",
+  "description": "Gerencie sua programação com vários monitores.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NathaReis/monitor.git"
+  },
+  "keywords": [],
+  "author": "Nathan Reis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NathaReis/monitor/issues"
+  },
+  "homepage": "https://github.com/NathaReis/monitor#readme",
+  "dependencies": {
+    "electron": "^33.2.0"
+  }
+}
