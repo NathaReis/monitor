@@ -1,0 +1,57 @@
+@import url(../main.css);
+
+header {
+    width: 100vw;
+    height: 70px;
+    background-color: #0003;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #fff;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+main {
+    width: 100vw;
+    height: calc(100vh - 70px);
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    
+    #list-folder {
+        width: 80vw;
+        max-width: 1000px;
+        height: calc(90vh - 70px);
+        overflow: hidden auto;
+        display: grid;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+
+        .box {
+            width: 75vw;
+            max-width: 850px;
+            height: 50px;
+            display: grid;
+            align-items: center;
+            color: #fff;
+            background-color: #000;
+            cursor: pointer;
+            
+            h1 {
+                margin-left: 15px;
+                font-size: .9rem;
+            }
+        }
+    }
+}

@@ -15,7 +15,7 @@ function createWindow() {
   win.maximize();
 //   win.webContents.openDevTools();
 
-  win.loadFile(path.join(__dirname, 'src/index.html'));
+  win.loadFile(path.join(__dirname, 'src/home/index.html'));
 }
 
 app.on('ready', () => {
@@ -29,6 +29,8 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
 })
 
+
+
 // Comunicações
 ipcMain.handle('getFiles', (event, category='video') => {
     return getFiles(category);
@@ -40,10 +42,11 @@ function getFiles(category='video') {
     let extensions = {
         video: ['.mp4','.mov','.avi','.wmv','.mkv','.flv','.webm'],
         image: ['.jpeg','.jpg','.png','.gif','.bmp','.tiff'],
-        audio: ['.mp3','.wav','.aac','.flac','.ogg']
+        audio: ['.mp3','.wav','.aac','.flac','.ogg'],
+        doc: ['.ppt','.pptx']
     }
     const files = findFiles(homeDirectory, extensions[category]);
-    const folders = [...new Set(files.map(file => file.folder))];
+    const folders = [...new Set(files.map(file => file.folder))].sort((a, b) => a.split("/").pop() < b.split("/").pop() ? -1 : 1);
     let result = {};
     folders.forEach(folder => {
         const filesFolder = files.filter(file => file.folder === folder);

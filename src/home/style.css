@@ -1,0 +1,36 @@
+@import url(../main.css);
+
+body {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+article {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    button {
+        font-size: 1rem;
+        cursor: pointer;
+        width: 70px;
+        height: 70px;
+    }
+}
+
+#list {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    width: 50dvw;
+    max-height: 500px;
+    overflow: hidden auto;
+
+    h1 {
+        color: #fff;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+}
