@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
-const createWindow = () => {
+function createWindow() {
   const win = new BrowserWindow({
     minWidth: 800,
     minHeight: 600,
@@ -13,7 +13,7 @@ const createWindow = () => {
     }
   });
   win.maximize();
-  win.webContents.openDevTools();
+//   win.webContents.openDevTools();
 
   win.loadFile(path.join(__dirname, 'src/index.html'));
 }
@@ -42,7 +42,14 @@ function getFiles(category='video') {
         image: ['.jpeg','.jpg','.png','.gif','.bmp','.tiff'],
         audio: ['.mp3','.wav','.aac','.flac','.ogg']
     }
-    return findFiles(homeDirectory, extensions[category]);
+    const files = findFiles(homeDirectory, extensions[category]);
+    const folders = [...new Set(files.map(file => file.folder))];
+    let result = {};
+    folders.forEach(folder => {
+        const filesFolder = files.filter(file => file.folder === folder);
+        result[folder] = filesFolder;
+    })
+    return result;
 }
 getFiles()
 
