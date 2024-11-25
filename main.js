@@ -1,21 +1,68 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, screen } = require('electron');
+
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
+const secundaryDisplay = [];
 function createWindow() {
-  const win = new BrowserWindow({
-    minWidth: 800,
-    minHeight: 600,
-    webPreferences: {
-        preload: path.join(__dirname, 'preload.js'),
-        nodeIntegration: true
-    }
-  });
-  win.maximize();
-//   win.webContents.openDevTools();
+    const primaryDisplay = screen.getPrimaryDisplay();
+    const { width, height } = primaryDisplay.workAreaSize
 
-  win.loadFile(path.join(__dirname, 'src/home/index.html'));
+    const win = new BrowserWindow({
+        width: width,
+        height: height,
+        minWidth: 800,
+        minHeight: 600,
+        transparent: true,
+        frame: true,
+        autoHideMenuBar: false,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: true
+        }
+    });
+    // win.maximize();
+    //   win.webContents.openDevTools();
+
+    win.loadFile(path.join(__dirname, 'src/home/index.html'));
+
+    createSecundaryWindows();
+
+    win.on('closed', () => {
+        secundaryDisplay.forEach((display) => {
+            display.close();
+        });
+    });
+    win.on('focus', () => {
+        secundaryDisplay.forEach((display) => {
+            display.focus();
+        });    
+    });
+}
+
+function createSecundaryWindows() {
+    const displays = screen.getAllDisplays();
+    const externalDisplay = displays.filter((display) => {
+        return display.bounds.x !== 0 || display.bounds.y !== 0;
+    });
+
+    if(externalDisplay) {
+        externalDisplay.forEach((display) => {
+            const win = new BrowserWindow({
+                x: display.bounds.x,
+                y: display.bounds.y,
+                minWidth: display.workAreaSize.width,
+                minHeight: display.workAreaSize.height,
+                frame: false,
+                transparent: true,
+                alwaysOnTop: true // Sempre ativo, sobrepondo as demais telas
+            });
+            win.maximize();
+            win.loadFile(path.join(__dirname, 'src/monitor/index.html'));
+            secundaryDisplay.push(win);
+        });
+    }
 }
 
 app.on('ready', () => {
