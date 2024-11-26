@@ -62,6 +62,7 @@ function getFiles(files) {
     files.forEach(file => {
         const box = document.createElement("div");
         box.classList.add("box");
+        
         box.onclick = async () => {
             const windows = JSON.parse(await api.getWindows());
             console.log(windows)

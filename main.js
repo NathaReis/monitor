@@ -20,7 +20,8 @@ function createWindow() {
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true
-        }
+        },
+        movable: false
     });
     win.maximize();
     win.webContents.openDevTools();
@@ -44,7 +45,8 @@ function createSecundaryWindows(windowPrimary) {
                 minHeight: display.workAreaSize.height,
                 frame: false,
                 transparent: true,
-                alwaysOnTop: true // Sempre ativo, sobrepondo as demais telas
+                alwaysOnTop: true, // Sempre ativo, sobrepondo as demais telas
+                movable: false // Impede que a janela seja arrastada para outra tela
             });
             win.maximize();
             win.loadFile(path.join(__dirname, 'src/pages/monitor/index.html'));
@@ -69,6 +71,12 @@ function createSecundaryWindows(windowPrimary) {
 
 app.on('ready', () => {
     createWindow();
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    })
+    app.on('window-all-closed', () => {
+        if (process.platform !== 'darwin') app.quit();
+    })
 
     // Comunicações >>>>>>>>>>>>>>>>>
 
@@ -87,15 +95,6 @@ app.on('ready', () => {
     // ipcRenderer.on('mensagem-do-main', (event, args) => {
     //     console.log(args); // Irá imprimir "Olá do processo principal!"
     // });
-
-    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow();
-    })
-})
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit();
 })
 
 // GetFiles
