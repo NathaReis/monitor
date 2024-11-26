@@ -30,9 +30,15 @@ header {
     display: flex;
     align-items: center;
     gap: 10px;
+    color: #fff;
 
     span {
         width: 20px;
+    }
+
+    svg {
+        width: 30px;
+        fill: #fff;
     }
 
     a {
@@ -41,7 +47,7 @@ header {
         text-transform: uppercase;
         letter-spacing: 2px;
     }
-    a:hover {
+    a:hover, svg:hover {
         opacity: .7;
     }
 }
