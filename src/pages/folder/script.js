@@ -3,7 +3,7 @@ const category = new URLSearchParams(location.search).get('category');
 
 (async () => {
     $listFolder.innerHTML = '';
-    const files = await window.api.send('getFiles', category);
+    const files = await api.getFiles(category);
 
     if(files) {
         const $categoryHeader = document.querySelector("#category-header");
@@ -62,7 +62,9 @@ function getFiles(files) {
     files.forEach(file => {
         const box = document.createElement("div");
         box.classList.add("box");
-        box.onclick = () => {
+        box.onclick = async () => {
+            const windows = JSON.parse(await api.getWindows());
+            console.log(windows)
             console.log(file);
         }
 

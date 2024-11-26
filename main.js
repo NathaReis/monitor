@@ -25,7 +25,7 @@ function createWindow() {
     win.maximize();
     win.webContents.openDevTools();
     win.loadFile(path.join(__dirname, 'src/pages/home/index.html'));
-
+    
     createSecundaryWindows(win);
 }
 
@@ -59,16 +59,36 @@ function createSecundaryWindows(windowPrimary) {
                 display.window.close();
             });
         });
-        windowPrimary.on('focus', () => {
-            secundaryDisplay.forEach((display) => {
-                display.window.focus();
-            });    
-        });
+        // windowPrimary.on('focus', () => {
+        //     secundaryDisplay.forEach((display) => {
+        //         display.window.focus();
+        //     });    
+        // });
     }
 }
 
 app.on('ready', () => {
     createWindow();
+
+    // Comunicações >>>>>>>>>>>>>>>>>
+
+    ipcMain.handle('getFiles', (event, category='video') => {
+        return getFiles(category);
+    });
+    ipcMain.handle('getWindows', () => {
+        return JSON.stringify(secundaryDisplay.map(item => item.id));
+    });
+
+    /* EXEMPLO DE COMO ENVIAR UMA MENSAGEM PARA UMA JANELA ESPECÍFICA */
+    
+    // // Enviando uma mensagem para a janela principal
+    // mainWindow.webContents.send('mensagem-do-main', 'Olá do processo principal!');
+    // // index.html (renderer)
+    // ipcRenderer.on('mensagem-do-main', (event, args) => {
+    //     console.log(args); // Irá imprimir "Olá do processo principal!"
+    // });
+
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -77,13 +97,6 @@ app.on('ready', () => {
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
 })
-
-
-
-// Comunicações
-ipcMain.handle('getFiles', (event, category='video') => {
-    return getFiles(category);
-});
 
 // GetFiles
 function getFiles(category='video') {
