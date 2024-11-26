@@ -1,14 +1,15 @@
-@import url(../main.css);
+@import url(../global.css);
 
 #list-folder {
     width: 700px;
-    height: calc(90vh - 70px);
+    height: calc(90vh - var(--headerSize) - var(--footerSize));
     overflow: hidden auto;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
     gap: 15px;
+    padding: 20px;
 
     .box {
         height: 50px;
@@ -18,7 +19,7 @@
         flex-basis: 300px;
         flex-grow: 1;
         background-color: #ffffff;
-        box-shadow: 0 0 10px #0004;
+        box-shadow: 0 0 10px #0002;
         border-radius: 10px;
         cursor: pointer;
         padding: 0 10px 0 0;
@@ -26,8 +27,8 @@
         overflow: hidden;
 
         .box-svg {
-            width: 50px;
-            height: 50px;
+            min-width: 50px;
+            min-height: 50px;
             background-color: #eee;
             display: grid;
             align-items: center;
@@ -56,7 +57,7 @@
 
     .box:hover {
         background-color: #eeeeee;
-        box-shadow: 0 0 10px #0004, 0 0 20px #0004, 0 0 50px #0004;
+        box-shadow: 0 0 10px #0002, 0 0 20px #0002, 0 0 50px #0002;
 
         .box-svg {
             background-color: #ddd;
