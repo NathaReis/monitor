@@ -14,6 +14,7 @@
         height: 50px;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         flex-basis: 300px;
         flex-grow: 1;
         background-color: #ffffff;
@@ -22,13 +23,16 @@
         cursor: pointer;
         padding: 0 10px 0 0;
         gap: 10px;
+        overflow: hidden;
 
         .box-svg {
             width: 50px;
             height: 50px;
+            background-color: #eee;
             display: grid;
             align-items: center;
             justify-content: center;
+            z-index: 2;
 
             svg {
                 width: 25px;
@@ -37,14 +41,23 @@
         }
         
         h1 {
+            z-index: 1;
             margin-left: 15px;
             font-size: .9rem;
+        }
+        h1.titleFolder {
+            max-width: 200px;
+            overflow: hidden;
         }
     }
 
     .box:hover {
         background-color: #eeeeee;
         box-shadow: 0 0 10px #0004, 0 0 20px #0004, 0 0 50px #0004;
+
+        .box-svg {
+            background-color: #ddd;
+        }
     }
 }
 

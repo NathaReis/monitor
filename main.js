@@ -89,7 +89,7 @@ function getFiles(category='video') {
         video: ['.mp4','.mov','.avi','.wmv','.mkv','.flv','.webm'],
         image: ['.jpeg','.jpg','.png','.gif','.bmp','.tiff'],
         audio: ['.mp3','.wav','.aac','.flac','.ogg'],
-        doc: ['.ppt','.pptx']
+        doc: ['.ppt','.pptx','.pdf']
     }
     const files = findFiles(homeDirectory, extensions[category]);
     const folders = [...new Set(files.map(file => file.folder))].sort((a, b) => a.split("/").pop() < b.split("/").pop() ? -1 : 1);
