@@ -110,20 +110,23 @@ function findFiles(directory, allowedExtensions) {
 
         items.forEach(item => {
             const fullPath = path.join(directory, item.name);
-
-            const hiddenFolder = item.name.split("").shift() === '.';
+            const hiddenFolder = fullPath.split("/").pop().split("").shift() == '.';
             const depth = fullPath.split("/").length <= 9;
-            if(item.isDirectory() && !hiddenFolder && depth) {
+
+            if(item.isDirectory() && !hiddenFolder && depth && fs.existsSync(fullPath)) {
                 files = files.concat(findFiles(fullPath, allowedExtensions));
             } 
             else {
+                const stats = fs.statSync(fullPath);
+                const size = stats.size;
                 const extname = path.extname(fullPath).toLowerCase();
                 if(allowedExtensions.includes(extname)) {
                     files.push({
                         name: path.basename(fullPath, extname),
                         path: fullPath,
                         extension: extname,
-                        folder: path.dirname(fullPath)
+                        folder: path.dirname(fullPath),
+                        size: size
                     });
                 }
             }

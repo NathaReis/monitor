@@ -125,9 +125,15 @@ function getFiles(files) {
         box.innerHTML += svg;
 
         const h1 = document.createElement("h1");
-        const name = file.name.length >= 65 ? file.name.slice(0,65)+'... ' : file.name;
+        const lengthName = 50;
+        const name = file.name.length >= lengthName ? file.name.slice(0,lengthName)+'... ' : file.name;
         h1.innerHTML = name + file.extension;
         box.appendChild(h1);
+
+        const qtd = document.createElement("h1");
+        qtd.classList.add("qtd");
+        qtd.innerHTML = `${(file.size / (1024 ** 2)).toFixed(2)} mb`;
+        box.appendChild(qtd);
 
         $listFolder.appendChild(box);
     })

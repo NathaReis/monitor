@@ -49,6 +49,9 @@
             max-width: 200px;
             overflow: hidden;
         }
+        h1.qtd {
+            font-size: .7rem;
+        }
     }
 
     .box:hover {
