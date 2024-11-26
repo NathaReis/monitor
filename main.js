@@ -16,32 +16,20 @@ function createWindow() {
         minHeight: 600,
         transparent: true,
         frame: true,
-        autoHideMenuBar: false,
+        autoHideMenuBar: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true
         }
     });
-    // win.maximize();
-    //   win.webContents.openDevTools();
-
+    win.maximize();
+    win.webContents.openDevTools();
     win.loadFile(path.join(__dirname, 'src/home/index.html'));
 
-    createSecundaryWindows();
-
-    win.on('closed', () => {
-        secundaryDisplay.forEach((display) => {
-            display.close();
-        });
-    });
-    win.on('focus', () => {
-        secundaryDisplay.forEach((display) => {
-            display.focus();
-        });    
-    });
+    // createSecundaryWindows(win);
 }
 
-function createSecundaryWindows() {
+function createSecundaryWindows(windowPrimary) {
     const displays = screen.getAllDisplays();
     const externalDisplay = displays.filter((display) => {
         return display.bounds.x !== 0 || display.bounds.y !== 0;
@@ -61,6 +49,17 @@ function createSecundaryWindows() {
             win.maximize();
             win.loadFile(path.join(__dirname, 'src/monitor/index.html'));
             secundaryDisplay.push(win);
+        });
+
+        windowPrimary.on('closed', () => {
+            secundaryDisplay.forEach((display) => {
+                display.close();
+            });
+        });
+        windowPrimary.on('focus', () => {
+            secundaryDisplay.forEach((display) => {
+                display.focus();
+            });    
         });
     }
 }

@@ -1,57 +1,63 @@
 @import url(../main.css);
 
-header {
-    width: 100vw;
-    height: 70px;
-    background-color: #0003;
+#list-folder {
+    width: 700px;
+    height: calc(90vh - 70px);
+    overflow: hidden auto;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
 
-    button {
-        background: transparent;
-        border: none;
-        outline: none;
-        color: #fff;
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        text-decoration: underline;
-        cursor: pointer;
-    }
-}
-
-main {
-    width: 100vw;
-    height: calc(100vh - 70px);
-    display: grid;
-    align-items: center;
-    justify-content: center;
-    
-    #list-folder {
-        width: 80vw;
-        max-width: 1000px;
-        height: calc(90vh - 70px);
-        overflow: hidden auto;
-        display: grid;
+    .box {
+        height: 50px;
+        display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 15px;
+        flex-basis: 300px;
+        flex-grow: 1;
+        background-color: #ffffff;
+        box-shadow: 0 0 10px #0004;
+        border-radius: 10px;
+        cursor: pointer;
+        padding: 0 10px 0 0;
+        gap: 10px;
 
-        .box {
-            width: 75vw;
-            max-width: 850px;
+        .box-svg {
+            width: 50px;
             height: 50px;
             display: grid;
             align-items: center;
-            color: #fff;
-            background-color: #000;
-            cursor: pointer;
-            
-            h1 {
-                margin-left: 15px;
-                font-size: .9rem;
+            justify-content: center;
+
+            svg {
+                width: 25px;
+                fill: var(--primary);
             }
         }
+        
+        h1 {
+            margin-left: 15px;
+            font-size: .9rem;
+        }
     }
+
+    .box:hover {
+        background-color: #eeeeee;
+        box-shadow: 0 0 10px #0004, 0 0 20px #0004, 0 0 50px #0004;
+    }
+}
+
+#list-folder::-webkit-scrollbar {
+    width: 12px;               /* width of the entire scrollbar */
+}
+
+#list-folder::-webkit-scrollbar-track {
+    background: var(--primary);        /* color of the tracking area */
+}
+
+#list-folder::-webkit-scrollbar-thumb {
+    background-color: var(--show);    /* color of the scroll thumb */
+    border-radius: 5px;       /* roundness of the scroll thumb */
+    border: 3px solid var(--primary);  /* creates padding around scroll thumb */
 }

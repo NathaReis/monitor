@@ -5,9 +5,62 @@
     user-select: none;
 }
 
+:root {
+    --background: #2a2829;
+    --primary: #591C21;
+    --secundary: #044040;
+    --show: #D92525;
+    --opacity: #8C1F28;
+    --font-family: Arial, Helvetica, sans-serif;
+}
+
+body, html {
+    height:100%;
+}
+
 body {
-    background-color: #1b2841ef;
+    background-color: var(--background);
+    font-family: 'Cabin Condensed', sans-serif;
+}
+
+header {
     width: 100vw;
-    height: 100vh;
+    height: 70px;
+    background-color: #0003;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    span {
+        width: 20px;
+    }
+
+    a {
+        color: #fff;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    a:hover {
+        opacity: .7;
+    }
+}
+
+main {
+    width: 100vw;
+    height: calc(100vh - 70px);
+    display: grid;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
+}
+
+svg#loading {
+    font-weight:bold;
+    max-width:600px;
+    height:auto;
+}
+
+.remove {
+    display: none;
 }
