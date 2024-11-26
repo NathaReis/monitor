@@ -7,9 +7,9 @@
 
 :root {
     --background: #2a2829;
-    --primary: #591C21;
-    --show: #D92525;
-    --opacity: #8C1F28;
+    --primary: #044040;
+    --show: #25d9ca;
+    --opacity: #1f8c8c;
     --font-family: Arial, Helvetica, sans-serif;
     --headerSize: 70px;
     --footerSize: 80px;
@@ -17,9 +17,9 @@
 
 .light:root {
     --background: #ebebeb;
-    --primary: #044040;
-    --show: #25d9ca;
-    --opacity: #1f8c8c;
+    --primary: #591C21;
+    --show: #D92525;
+    --opacity: #8C1F28;
 }
 
 body {
