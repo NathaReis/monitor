@@ -24,7 +24,7 @@ function createWindow() {
     });
     win.maximize();
     win.webContents.openDevTools();
-    win.loadFile(path.join(__dirname, 'src/home/index.html'));
+    win.loadFile(path.join(__dirname, 'src/pages/home/index.html'));
 
     // createSecundaryWindows(win);
 }
@@ -47,7 +47,7 @@ function createSecundaryWindows(windowPrimary) {
                 alwaysOnTop: true // Sempre ativo, sobrepondo as demais telas
             });
             win.maximize();
-            win.loadFile(path.join(__dirname, 'src/monitor/index.html'));
+            win.loadFile(path.join(__dirname, 'src/pages/monitor/index.html'));
             secundaryDisplay.push(win);
         });
 
