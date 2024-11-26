@@ -1,17 +1,13 @@
 import { ThemeService } from './services/theme.service.js';
+import { ControlService } from './services/control.service.js';
 
 const $body = document.querySelector("body");
 const $html = document.querySelector("html");
 const $header = document.querySelector("header");
 
-function createControl() {
-    const footer = document.createElement("footer");
-    footer.onclick = () => {
-        footer.classList.toggle("active");
-    }
-    $body.appendChild(footer);
-}
-createControl();
+// CONTROL
+const control = new ControlService($body);
+control.createControl();
 
 
 // THEME

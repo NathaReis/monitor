@@ -26,7 +26,7 @@ function createWindow() {
     win.webContents.openDevTools();
     win.loadFile(path.join(__dirname, 'src/pages/home/index.html'));
 
-    // createSecundaryWindows(win);
+    createSecundaryWindows(win);
 }
 
 function createSecundaryWindows(windowPrimary) {
@@ -48,17 +48,20 @@ function createSecundaryWindows(windowPrimary) {
             });
             win.maximize();
             win.loadFile(path.join(__dirname, 'src/pages/monitor/index.html'));
-            secundaryDisplay.push(win);
+            secundaryDisplay.push({
+                window: win,
+                id: display.id
+            });
         });
 
         windowPrimary.on('closed', () => {
             secundaryDisplay.forEach((display) => {
-                display.close();
+                display.window.close();
             });
         });
         windowPrimary.on('focus', () => {
             secundaryDisplay.forEach((display) => {
-                display.focus();
+                display.window.focus();
             });    
         });
     }
