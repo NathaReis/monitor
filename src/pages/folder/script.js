@@ -62,7 +62,10 @@ function getFiles(files) {
     files.forEach(file => {
         const box = document.createElement("div");
         box.classList.add("box");
-        box.onclick = () => setControl(file);
+        box.onclick = () => {
+            document.querySelector("footer").classList.add("active");
+            setControl({file, files, index: files.indexOf(file)});
+        }
 
         let svg;
         switch(category) {
@@ -137,14 +140,45 @@ function getFiles(files) {
     })
 }
 
-function setControl(file) {
-    const $footer = document.querySelector("footer");
-    $footer.classList.add("active");
+function setControl(control) {
+    if(control) {
+        const { file, files, index } = control;
+        const $title = document.querySelector("#title");
+        $title.innerHTML = file.name;
+        
+        if(category === 'image') {
+            const $imageBox = document.querySelector("#image-box");
+            const $image = $imageBox.querySelector("#image");
+            $image.style = `--url: url(${file.path})`;
+            $image.onclick = (e) => {
+                e.stopPropagation();
+                $imageBox.classList.toggle("full");
+            }
+            $imageBox.classList.remove("remove");
+        }
     
-    if(category === 'image') {
-        const $imageBox = document.querySelector("#image-box");
-        $imageBox.classList.remove("remove");
-        const $image = $imageBox.querySelector("#image");
-        $image.style = `--url: url(${file.path})`;
+        localStorage.setItem("control", JSON.stringify({file, files, index}));
     }
 }
+setControl(JSON.parse(localStorage.getItem("control")));
+
+function backFile(e) {
+    e.stopPropagation();
+    const controlLocal = JSON.parse(localStorage.getItem("control"));
+    if(controlLocal) {
+        const { files, index } = controlLocal;
+        const newIndex = index - 1 < 0 ? files.length - 1 : index - 1;
+        setControl({file: files[newIndex], files, index: newIndex});
+    }
+}
+document.querySelector("#backFile").onclick = (e) => backFile(e);
+function nextFile(e) {
+    e.stopPropagation();
+    const controlLocal = JSON.parse(localStorage.getItem("control"));
+    if(controlLocal) {
+        const { files, index } = controlLocal;
+        const newIndex = index + 1 === files.length ? 0 : index + 1;
+        setControl({file: files[newIndex], files, index: newIndex});
+    }
+}
+document.querySelector("#nextFile").onclick = (e) => nextFile(e);

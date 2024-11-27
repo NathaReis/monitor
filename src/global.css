@@ -122,23 +122,30 @@ footer {
 
         #image-box {
             #image {
-                position: relative;
                 width: 50vw;
                 max-width: 1000px;
                 height: calc(100vh - (var(--headerSize)*2) - var(--footerSize) - 100px);
                 background: var(--url);
                 background-position: center;
-                background-size: cover;
+                background-size: 100%;
                 background-repeat: no-repeat;
+                overflow: hidden;
+                cursor: zoom-in;
+                background-color: #000;
                 border-radius: 20px;
-
-                svg {
-                    position: absolute;
-                    right: 20px;
-                    bottom: 20px;
-                }
             }
-
+        }
+        #image-box.full {
+            #image {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100vw;
+                min-width: 100vw;
+                height: 100vh;
+                min-height: 100vh;
+                cursor: zoom-out;
+            }
         }
     }
 
