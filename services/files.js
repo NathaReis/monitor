@@ -4,14 +4,13 @@ const path = require('path');
 
 // GetFiles
 function getFiles(category='video') {
-    const homeDirectory = os.homedir();
     let extensions = {
         video: ['.mp4','.mov','.avi','.wmv','.mkv','.flv','.webm'],
         image: ['.jpeg','.jpg','.png','.gif','.bmp','.tiff'],
         audio: ['.mp3','.wav','.aac','.flac','.ogg'],
         doc: ['.ppt','.pptx','.pdf']
     }
-    const files = findFiles(homeDirectory, extensions[category]);
+    const files = findFiles(os.homedir(), extensions[category]);
     const folders = [...new Set(files.map(file => file.folder))].sort((a, b) => a.split(path.sep).pop() < b.split(path.sep).pop() ? -1 : 1);
     let result = {};
     folders.forEach(folder => {
@@ -45,7 +44,7 @@ function findFiles(directory, allowedExtensions) {
                         path: fullPath,
                         extension: extname,
                         folder: path.dirname(fullPath).split(path.sep).pop(),
-                        size: size
+                        size: (size / (1024 ** 2)).toFixed(2)
                     });
                 }
             }

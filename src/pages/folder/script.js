@@ -62,12 +62,7 @@ function getFiles(files) {
     files.forEach(file => {
         const box = document.createElement("div");
         box.classList.add("box");
-        
-        box.onclick = async () => {
-            const windows = JSON.parse(await api.getWindows());
-            console.log(windows)
-            console.log(file);
-        }
+        box.onclick = () => setControl(file);
 
         let svg;
         switch(category) {
@@ -135,9 +130,21 @@ function getFiles(files) {
 
         const qtd = document.createElement("h1");
         qtd.classList.add("qtd");
-        qtd.innerHTML = `${(file.size / (1024 ** 2)).toFixed(2)} mb`;
+        qtd.innerHTML = `${file.size} mb`;
         box.appendChild(qtd);
 
         $listFolder.appendChild(box);
     })
+}
+
+function setControl(file) {
+    const $footer = document.querySelector("footer");
+    $footer.classList.add("active");
+    
+    if(category === 'image') {
+        const $imageBox = document.querySelector("#image-box");
+        $imageBox.classList.remove("remove");
+        const $image = $imageBox.querySelector("#image");
+        $image.style = `--url: url(${file.path})`;
+    }
 }

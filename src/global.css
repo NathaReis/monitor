@@ -120,8 +120,25 @@ footer {
             transition: .3s;
         }
 
-        #image {
-            back
+        #image-box {
+            #image {
+                position: relative;
+                width: 50vw;
+                max-width: 1000px;
+                height: calc(100vh - (var(--headerSize)*2) - var(--footerSize) - 100px);
+                background: var(--url);
+                background-position: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+                border-radius: 20px;
+
+                svg {
+                    position: absolute;
+                    right: 20px;
+                    bottom: 20px;
+                }
+            }
+
         }
     }
 
@@ -188,11 +205,11 @@ footer {
 }
 footer.active {
     height: calc(100vh - var(--headerSize));
-
+    
     #menu-box {
         height: var(--headerSize);
     }
-
+    
     #media-box {
         height: calc(100vh - var(--headerSize) - var(--footerSize) - var(--headerSize));
     }
