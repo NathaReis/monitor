@@ -39,7 +39,6 @@
             display: grid;
             align-items: center;
             justify-content: center;
-            font-family: var(--font-family);
             letter-spacing: 2px;
             overflow: hidden;
         }

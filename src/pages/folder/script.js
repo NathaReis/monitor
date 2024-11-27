@@ -15,7 +15,7 @@ const category = new URLSearchParams(location.search).get('category');
             box.classList.add("box");
             box.onclick = () => {
                 const $folderHeader = document.querySelector("#folder-header");
-                $folderHeader.innerHTML = folder.split("/").pop() + '/';
+                $folderHeader.innerHTML = folder + '/';
                 $folderHeader.href = `./index.html?category=${category}&folder=${folder}`;
         
                 getFiles(files[folder]);
@@ -31,7 +31,7 @@ const category = new URLSearchParams(location.search).get('category');
 
             const h1 = document.createElement("h1");
             h1.classList.add("titleFolder");
-            h1.innerHTML = folder.split("/").pop();
+            h1.innerHTML = folder;
             box.appendChild(h1);
 
             const qtd = document.createElement("h1");
@@ -45,9 +45,9 @@ const category = new URLSearchParams(location.search).get('category');
         if(folder) {
             const $boxes = document.querySelectorAll(".box");
             for(let box of $boxes) {
-                if(box.querySelector("h1").innerHTML === folder.split("/").pop()) {
+                if(box.querySelector("h1").innerHTML === folder) {
                     const $folderHeader = document.querySelector("#folder-header");
-                    $folderHeader.innerHTML = folder.split("/").pop() + '/';
+                    $folderHeader.innerHTML = folder + '/';
                     $folderHeader.href = `./index.html?category=${category}&folder=${folder}`;
                     getFiles(files[folder]);
                     break;
@@ -128,7 +128,7 @@ function getFiles(files) {
         box.innerHTML += svg;
 
         const h1 = document.createElement("h1");
-        const lengthName = 50;
+        const lengthName = 40;
         const name = file.name.length >= lengthName ? file.name.slice(0,lengthName)+'... ' : file.name;
         h1.innerHTML = name + file.extension;
         box.appendChild(h1);
