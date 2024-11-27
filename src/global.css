@@ -89,15 +89,113 @@ footer {
     left: 0;
     bottom: 0;
     width: 100vw;
-    height: 80px;
+    height: var(--footerSize);
     background-color: var(--primary);
     transition: .3s;
     z-index: 1000;
     cursor: pointer;
     box-shadow: 0 0 10px #0003, 0 0 20px #0003, 0 0 50px #0003;
+    overflow: hidden;
+
+    #menu-box {
+        width: 100vw;
+        height: 0;
+        background-color: #0005;
+        transition: .3s;
+    }
+
+    #media-box {
+        width: 100vw;
+        height: 0;
+        transition: .3s;
+        background-color: #0003;
+        display: grid;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        svg {
+            width: 30px;
+            fill: var(--show);
+            transition: .3s;
+        }
+
+        #image {
+            back
+        }
+    }
+
+    #control-box {
+        width: 100vw;
+        height: var(--footerSize);
+        display: flex;
+        transition: .3s;
+
+        #image {
+            min-width: var(--footerSize);
+            height: var(--footerSize);
+            background-color: var(--opacity);
+            box-shadow: 0 10px 10px #0009;
+            display: grid;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                width: 30px;
+                fill: var(--show);
+            }
+        }
+
+        #title {
+            width: calc(100vw - var(--footerSize) - 350px);
+            max-width: 700px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            text-wrap: nowrap;
+            padding: 10px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        #controls {
+            position: absolute;
+            right: 0;
+            bottom: calc(var(--footerSize)/2 - 25px);
+            width: 300px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+
+            svg {
+                width: 25px;
+                fill: #fff;
+            }
+
+            #stop {
+                width: 15px;
+                height: 15px;
+                border: 1px solid #fff;
+                border-radius: 5px;
+            }
+
+            svg:hover, #stop:hover {
+                opacity: .8;
+            }
+        }
+    }
 }
 footer.active {
     height: calc(100vh - var(--headerSize));
+
+    #menu-box {
+        height: var(--headerSize);
+    }
+
+    #media-box {
+        height: calc(100vh - var(--headerSize) - var(--footerSize) - var(--headerSize));
+    }
 }
 
 svg#loading {

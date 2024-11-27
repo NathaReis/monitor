@@ -7,7 +7,7 @@ const $header = document.querySelector("header");
 
 // CONTROL
 const control = new ControlService($body);
-control.createControl();
+// control.createControl();
 
 
 // THEME
