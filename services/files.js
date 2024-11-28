@@ -10,7 +10,7 @@ function getFiles(category='video') {
         audio: ['.mp3','.wav','.aac','.flac','.ogg'],
         doc: ['.ppt','.pptx','.pdf']
     }
-    const files = findFiles(os.homedir(), extensions[category]);
+    const files = findFiles(os.homedir(), extensions[category], category);
     const folders = [...new Set(files.map(file => file.folder))].sort((a, b) => a.split(path.sep).pop() < b.split(path.sep).pop() ? -1 : 1);
     let result = {};
     folders.forEach(folder => {
@@ -20,7 +20,7 @@ function getFiles(category='video') {
     return result;
 }
 
-function findFiles(directory, allowedExtensions) {
+function findFiles(directory, allowedExtensions, category) {
     let files = [];
 
     try {
@@ -32,7 +32,7 @@ function findFiles(directory, allowedExtensions) {
             const depth = fullPath.split(path.sep).length <= 9;
 
             if(item.isDirectory() && !hiddenFolder && depth && fs.existsSync(fullPath)) {
-                files = files.concat(findFiles(fullPath, allowedExtensions));
+                files = files.concat(findFiles(fullPath, allowedExtensions, category));
             } 
             else {
                 const stats = fs.statSync(fullPath);
@@ -44,7 +44,8 @@ function findFiles(directory, allowedExtensions) {
                         path: fullPath,
                         extension: extname,
                         folder: path.dirname(fullPath).split(path.sep).pop(),
-                        size: (size / (1024 ** 2)).toFixed(2)
+                        size: (size / (1024 ** 2)).toFixed(2),
+                        category: category
                     });
                 }
             }

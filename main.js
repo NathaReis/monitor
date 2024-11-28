@@ -25,7 +25,23 @@ function createWindow() {
     win.webContents.openDevTools();
     win.loadFile(path.join(__dirname, 'src/pages/home/index.html'));
     
-    return [] // createSecundaryWindows(win);
+    // return createHiddenWindow(win);
+    return {monitors: createSecundaryWindows(win), displayMedia: createHiddenWindow(win)};
+}
+
+function createHiddenWindow(windowPrimary) {
+    const displayMedia = new BrowserWindow({
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: true,
+        },
+    })
+    displayMedia.hide();
+
+    windowPrimary.on('closed', () => {
+        displayMedia.close();
+    });
+    return displayMedia
 }
 
 function createSecundaryWindows(windowPrimary) {
@@ -35,7 +51,7 @@ function createSecundaryWindows(windowPrimary) {
     });
 
     if(monitors) {
-        const monitorsAux = [];
+        let monitorsAux = [];
         monitors.forEach((monitor) => {
             const win = new BrowserWindow({
                 x: monitor.bounds.x,
@@ -54,6 +70,11 @@ function createSecundaryWindows(windowPrimary) {
             });
             win.maximize();
             win.loadFile(path.join(__dirname, 'src/pages/monitor/index.html'));
+
+            win.on('closed', () => {
+                monitorsAux = [];
+                windowPrimary.close();
+            });
 
             monitorsAux.push({
                 window: win,
@@ -76,7 +97,7 @@ function createSecundaryWindows(windowPrimary) {
 }
 
 app.on('ready', () => {
-    const monitors = createWindow();
+    const { monitors, displayMedia } = createWindow();
 
     // Comunicações >>>>>>>>>>>>>>>>>
     ipcMain.handle('getFiles', (event, category='video') => {

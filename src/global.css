@@ -120,28 +120,24 @@ footer {
             transition: .3s;
         }
 
-        #image-box {
-            #image {
-                width: 50vw;
-                max-width: 1000px;
-                max-height: calc(100vh - (var(--headerSize)*2) - var(--footerSize) - 50px);
-                cursor: zoom-in;
-                background-color: #000;
-                border-radius: 20px;
-            }
+        #image, #video {
+            width: 50vw;
+            max-width: 1000px;
+            max-height: calc(100vh - (var(--headerSize)*2) - var(--footerSize) - 50px);
+            cursor: zoom-in;
+            background-color: #000;
+            border-radius: 20px;
         }
-        #image-box.full {
-            #image {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100vw;
-                min-width: 100vw;
-                height: 100vh;
-                min-height: 100vh;
-                border-radius: 0;
-                cursor: zoom-out;
-            }
+        #image.full, #video.full {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            min-width: 100vw;
+            height: 100vh;
+            min-height: 100vh;
+            border-radius: 0;
+            cursor: zoom-out;
         }
     }
 

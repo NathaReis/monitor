@@ -62,10 +62,7 @@ function getFiles(files) {
     files.forEach(file => {
         const box = document.createElement("div");
         box.classList.add("box");
-        box.onclick = () => {
-            document.querySelector("footer").classList.add("active");
-            setControl({file, files, index: files.indexOf(file)});
-        }
+        box.onclick = () => setControl({file, files, index: files.indexOf(file), active: true})
 
         let svg;
         switch(category) {
@@ -140,22 +137,46 @@ function getFiles(files) {
     })
 }
 
+const $title = document.querySelector("#title");
+const $image = document.querySelector("#image");
+const $video = document.querySelector("#video");
 function setControl(control) {
     if(control) {
-        const { file, files, index } = control;
-        const $title = document.querySelector("#title");
+        const { file, files, index, active } = control;
+
+        // Configurando título
         $title.innerHTML = file.name;
         
-        if(category === 'image') {
-            const $imageBox = document.querySelector("#image-box");
-            const $image = $imageBox.querySelector("#image");
-            $image.src = file.path;
-            // $image.style = `--url: url(${file.path})`;
-            $image.onclick = (e) => {
-                e.stopPropagation();
-                $imageBox.classList.toggle("full");
-            }
-            $imageBox.classList.remove("remove");
+        switch(file.category) {
+            case 'image':          
+                $image.src = file.path;
+                $image.onclick = (e) => {
+                    e.stopPropagation();
+                    $image.classList.toggle("full");
+                }
+
+                if(active) {
+                    document.querySelector("footer").classList.add("active");
+                }
+                // Habilitar visualização da imagem - Desabilitar visualização de vídeo e áudio
+                $image.classList.remove("remove");
+                $video.classList.add("remove");
+                break 
+            case 'video':
+                $video.src = file.path;
+                $video.onclick = (e) => {
+                    e.stopPropagation();
+                    $video.classList.toggle("full");
+                }
+                console.log($video)
+
+                if(active) {
+                    document.querySelector("footer").classList.add("active");
+                }
+                // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
+                $video.classList.remove("remove");
+                $image.classList.add("remove");
+                break 
         }
     
         localStorage.setItem("control", JSON.stringify({file, files, index}));
