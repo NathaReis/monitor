@@ -149,7 +149,8 @@ function setControl(control) {
         if(category === 'image') {
             const $imageBox = document.querySelector("#image-box");
             const $image = $imageBox.querySelector("#image");
-            $image.style = `--url: url(${file.path})`;
+            $image.src = file.path;
+            // $image.style = `--url: url(${file.path})`;
             $image.onclick = (e) => {
                 e.stopPropagation();
                 $imageBox.classList.toggle("full");
