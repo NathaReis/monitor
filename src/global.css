@@ -217,7 +217,7 @@ footer.active {
     }
 }
 
-#loading {
+/* #loading {
     position: absolute;
     left: 0;
     top: 0;
@@ -240,7 +240,7 @@ footer.active {
         align-items: center;
         justify-content: center;
     }
-}
+} */
 
 .remove {
     display: none !important;

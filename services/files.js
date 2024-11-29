@@ -1,12 +1,10 @@
 const fs = require('fs');
 const path = require("path");
-
 const getFolders = require(path.join(__dirname, 'folders'));
-
 const extensions = {
     video: ['.mp4','.mov','.avi','.wmv','.mkv','.flv','.webm'],
     image: ['.jpeg','.jpg','.png','.gif','.bmp','.tiff'],
-    audio: ['.mp3','.wav','.aac','.flac','.ogg'],
+    audio: ['.mp3','.wav','.aac','.flac','.ogg', '.m4a'],
     doc: ['.ppt','.pptx','.pdf']
 }
 
@@ -35,11 +33,11 @@ function readFiles(folder, category) {
                 if(item.isFile()) {
                     const fullPath = path.join(folder, item.name);
                     const stats = fs.statSync(fullPath);
-    
+                    const extname = path.extname(fullPath).toLowerCase();
                     return {
-                        name: item.name,
+                        name: path.basename(fullPath, extname),
                         path: fullPath,
-                        extension: path.extname(fullPath).toLowerCase(),
+                        extension: extname,
                         size: (stats.size / (1024 ** 2)).toFixed(2), // mb
                         category
                     };
@@ -54,17 +52,20 @@ function readFiles(folder, category) {
 
 function getFilesByFolder(folders, files, category) {
     const allowedExtensions = extensions[category];
+    
     const filesByFolder = {};
     folders.map((folder, index) => {
         filesByFolder[folder.name] = files[index]
         .filter(file => allowedExtensions.includes(file.extension));
     })
+
     const clearList = {};
     for(let folder in filesByFolder) {
         if(filesByFolder[folder].length > 0) {
             clearList[folder] = filesByFolder[folder];
         }
     }
+    
     return clearList;
 }
 

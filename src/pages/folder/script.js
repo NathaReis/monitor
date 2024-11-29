@@ -3,10 +3,9 @@ const category = new URLSearchParams(location.search).get('category');
 
 async function loadFile() {
     try {
-        loading(true);
         $listFolder.innerHTML = '';
         const files = await api.getFiles(category);
-    
+        
         if(files) {
             const $categoryHeader = document.querySelector("#category-header");
             $categoryHeader.innerHTML = category + '/';
@@ -39,7 +38,7 @@ async function loadFile() {
                 const qtd = document.createElement("h1");
                 qtd.innerHTML = `(${files[folder].length})`;
                 box.appendChild(qtd);
-    
+
                 $listFolder.appendChild(box);
             }
     
@@ -62,7 +61,6 @@ async function loadFile() {
         alert(error);
         console.error(error);
     }
-    finally{loading(false)}
 }
 
 function getFiles(files) {
@@ -131,9 +129,9 @@ function getFiles(files) {
         box.innerHTML += svg;
 
         const h1 = document.createElement("h1");
-        const lengthName = 40;
+        const lengthName = 20;
         const name = file.name.length >= lengthName ? file.name.slice(0,lengthName)+'... ' : file.name;
-        h1.innerHTML = name + file.extension;
+        h1.innerHTML = name;
         box.appendChild(h1);
 
         const qtd = document.createElement("h1");
@@ -148,6 +146,9 @@ function getFiles(files) {
 const $title = document.querySelector("#title");
 const $image = document.querySelector("#image");
 const $video = document.querySelector("#video");
+const $play = document.querySelector("#play");
+const $pause = document.querySelector("#pause");
+const $stop = document.querySelector("#stop");
 function setControl(control) {
     if(control) {
         const { file, files, index, active } = control;
@@ -169,6 +170,10 @@ function setControl(control) {
                 // Habilitar visualização da imagem - Desabilitar visualização de vídeo e áudio
                 $image.classList.remove("remove");
                 $video.classList.add("remove");
+
+                $stop.classList.add("remove");
+                $play.classList.add("remove");
+                $pause.classList.add("remove");
                 break 
             case 'video':
                 $video.src = file.path;
@@ -176,7 +181,6 @@ function setControl(control) {
                     e.stopPropagation();
                     $video.classList.toggle("full");
                 }
-                console.log($video)
 
                 if(active) {
                     document.querySelector("footer").classList.add("active");
@@ -184,7 +188,18 @@ function setControl(control) {
                 // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
                 $video.classList.remove("remove");
                 $image.classList.add("remove");
+
+                $stop.classList.remove("remove");
+                $play.classList.remove("remove");
+                $pause.classList.add("remove");
                 break 
+            case 'audio':
+                localStorage.setItem("displayMedia", JSON.stringify(file));
+
+                $stop.classList.remove("remove");
+                $play.classList.remove("remove");
+                $pause.classList.add("remove");
+                break
         }
     
         localStorage.setItem("control", JSON.stringify({file, files, index}));
@@ -202,6 +217,7 @@ function backFile(e) {
     }
 }
 document.querySelector("#backFile").onclick = (e) => backFile(e);
+
 function nextFile(e) {
     e.stopPropagation();
     const controlLocal = JSON.parse(localStorage.getItem("control"));
@@ -212,3 +228,20 @@ function nextFile(e) {
     }
 }
 document.querySelector("#nextFile").onclick = (e) => nextFile(e);
+
+function stop(e) {
+    e.stopPropagation();
+    localStorage.setItem("displayMediaStop", 'true');
+    $play.classList.remove("remove");
+    $pause.classList.add("remove");
+}
+$stop.onclick = (e) => stop(e)
+
+function play(e, active) {
+    e.stopPropagation();
+    localStorage.setItem("displayMediaPlay", active ? 'true' : 'false');
+    $play.classList.toggle("remove");
+    $pause.classList.toggle("remove");
+}
+$play.onclick = (e) => play(e, true);
+$pause.onclick = (e) => play(e, false);

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Monitor</title>
+</head>
+<body>
+    <h1>Media</h1>
+    <audio src="" controls></audio>
+    <video src="" controls></video>
+</body>
+<script type="module">
+    const $audio = document.querySelector("audio");
+    const $video = document.querySelector("video");
+
+    window.addEventListener("storage", (event) => {
+        const { newValue, key } = event;
+        if(key === 'displayMedia') {
+            renderMedia(JSON.parse(newValue));
+            localStorage.removeItem(key);
+        }
+        if(key === 'displayMediaPlay') {
+            play(newValue === 'true');
+            localStorage.removeItem(key);
+        }
+        if(key === 'displayMediaStop') {
+            stop();
+            localStorage.removeItem(key);
+        }
+    })
+
+    function renderMedia(media) {
+        if(media.category === 'audio') {
+            $video.src = '';
+            $audio.src = media.path;
+        }
+        else if(media.category === 'video'){
+            $audio.src = '';
+            $video.src = media.path;
+        }
+    }
+
+    function play(active) {
+        if(active) {
+            $audio.play();
+            $video.play();
+        }
+        else {
+            $audio.pause();
+            $video.pause();
+        }
+    }
+
+    function stop() {
+        $audio.currentTime = 0;
+        $video.currentTime = 0;
+        play(false);
+    }
+</script>
+</html>
