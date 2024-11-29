@@ -10,7 +10,7 @@ const extensions = {
 
 async function getFiles(category) {
     try {
-        const folders = await getFolders();
+        const folders = await getFolders();                                     
         
         const promises = folders.map(folder => {
             return readFiles(folder.fullPath, category);
@@ -27,7 +27,7 @@ async function getFiles(category) {
 function readFiles(folder, category) {
     return new Promise((resolve, reject) => {
         fs.readdir(folder, { withFileTypes: true }, (error, items) => {
-            if(error) reject(error);
+            if(error) return 'folderInvalid';
             
             const files = items.map(item => {
                 if(item.isFile()) {
@@ -44,7 +44,7 @@ function readFiles(folder, category) {
                 }
                 return 'folder';
             })
-            const isFiles = files.filter(file => file !== 'folder');
+            const isFiles = files.filter(file => file !== 'folder' || file !== 'folderInvalid');
             resolve(isFiles);
         });
     })

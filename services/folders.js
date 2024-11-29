@@ -29,6 +29,7 @@ async function getSecundaryFolders() {
 async function findFolders(baseFolders) {
     try {
         let currentBase = baseFolders;
+        let deth = 2;
 
         do {
             const promises = currentBase.map(folder => {
@@ -59,12 +60,12 @@ async function getPrimaryFolders() {
 function readFolder(folder) {
     return new Promise((resolve, reject) => {
         fs.readdir(folder, { withFileTypes: true }, (error, items) => {
-            if(error) reject(error);
+            if(error) return resolve([]);
             
             const folders = [];
             items.forEach(item => {
                 const firstLetter = item.name.split("").shift();
-                if(item.isDirectory() && firstLetter !== '.' && firstLetter !== '@') {
+                if(item.name !== 'AppData' && item.name !== 'thumb' && item.name !== 'Contacts' && item.name !== 'node_modules' && item.isDirectory() && firstLetter !== '.' && firstLetter !== '@' && firstLetter !== '-' && !(+firstLetter >= 0 && +firstLetter <= 9) && firstLetter !== '#' && firstLetter !== '_') {
                     folders.push({...item, fullPath: `${item.path}${path.sep}${item.name}`});
                 }
             })
