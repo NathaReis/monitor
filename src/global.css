@@ -217,12 +217,31 @@ footer.active {
     }
 }
 
-svg#loading {
-    font-weight:bold;
-    max-width:600px;
-    height:auto;
+#loading {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000;
+    background-color: transparent;
+    backdrop-filter: blur(10px);
+
+    display: grid;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+        width: 100%;
+        height: 100%;
+        font-weight: bold;
+
+        display: grid;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .remove {
-    display: none;
+    display: none !important;
 }

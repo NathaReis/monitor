@@ -5,7 +5,7 @@
     <title>Monitor</title>
     <link rel="stylesheet" href="./style.css">
 </head>
-<body>
+<body onload="loadFile()">
     <header>
         <span></span>
         <a href="../home/index.html">
@@ -18,9 +18,9 @@
         <a href="#" id="category-header"></a>
         <a href="#" id="folder-header"></a>
     </header>
+    
     <main>
         <article id="list-folder"></article>
-        
     </main>
     
     <footer onclick="this.classList.toggle('active')">

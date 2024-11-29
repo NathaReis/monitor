@@ -15,7 +15,7 @@ async function getFiles(category) {
         const folders = await getFolders();
         
         const promises = folders.map(folder => {
-            return readFiles(folder.fullPath);
+            return readFiles(folder.fullPath, category);
         });
         const files = await Promise.all(promises);
         
@@ -26,7 +26,7 @@ async function getFiles(category) {
     }
 }
 
-function readFiles(folder) {
+function readFiles(folder, category) {
     return new Promise((resolve, reject) => {
         fs.readdir(folder, { withFileTypes: true }, (error, items) => {
             if(error) reject(error);
@@ -40,7 +40,8 @@ function readFiles(folder) {
                         name: item.name,
                         path: fullPath,
                         extension: path.extname(fullPath).toLowerCase(),
-                        size: stats.size,
+                        size: (stats.size / (1024 ** 2)).toFixed(2), // mb
+                        category
                     };
                 }
                 return 'folder';
