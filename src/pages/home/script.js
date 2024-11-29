@@ -33,7 +33,6 @@ function setControl(control) {
                     e.stopPropagation();
                     $video.classList.toggle("full");
                 }
-                console.log($video)
 
                 if(active) {
                     document.querySelector("footer").classList.add("active");

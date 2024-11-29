@@ -25,7 +25,7 @@ function createWindow() {
     win.webContents.openDevTools();
     win.loadFile(path.join(__dirname, 'src/pages/home/index.html'));
     
-    // return createHiddenWindow(win);
+    return
     return {monitors: createSecundaryWindows(win), displayMedia: createHiddenWindow(win)};
 }
 
@@ -97,15 +97,22 @@ function createSecundaryWindows(windowPrimary) {
 }
 
 app.on('ready', () => {
-    const { monitors, displayMedia } = createWindow();
+    // const { monitors, displayMedia } = createWindow();
+    createWindow()
 
     // Comunicações >>>>>>>>>>>>>>>>>
-    ipcMain.handle('getFiles', (event, category='video') => {
-        return getFiles(category);
+    ipcMain.handle('getFiles', async (event, category='video') => {
+        try {
+            return await getFiles(category);
+        }
+        catch (error) {
+            console.error(error);
+            throw error;
+        }
     });
-    ipcMain.handle('getWindows', () => {
-        return JSON.stringify(monitors.map(monitor => monitor.id));
-    });
+    // ipcMain.handle('getWindows', () => {
+    //     return JSON.stringify(monitors.map(monitor => monitor.id));
+    // });
 
     /* EXEMPLO DE COMO ENVIAR UMA MENSAGEM PARA UMA JANELA ESPECÍFICA */
     

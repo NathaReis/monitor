@@ -1,60 +1,70 @@
 const fs = require('fs');
-const os = require('os');
-const path = require('path');
+const path = require("path");
 
-// GetFiles
-function getFiles(category='video') {
-    let extensions = {
-        video: ['.mp4','.mov','.avi','.wmv','.mkv','.flv','.webm'],
-        image: ['.jpeg','.jpg','.png','.gif','.bmp','.tiff'],
-        audio: ['.mp3','.wav','.aac','.flac','.ogg'],
-        doc: ['.ppt','.pptx','.pdf']
-    }
-    const files = findFiles(os.homedir(), extensions[category], category);
-    const folders = [...new Set(files.map(file => file.folder))].sort((a, b) => a.split(path.sep).pop() < b.split(path.sep).pop() ? -1 : 1);
-    let result = {};
-    folders.forEach(folder => {
-        const filesFolder = files.filter(file => file.folder === folder);
-        result[folder] = filesFolder;
-    })
-    return result;
+const getFolders = require(path.join(__dirname, 'folders'));
+
+const extensions = {
+    video: ['.mp4','.mov','.avi','.wmv','.mkv','.flv','.webm'],
+    image: ['.jpeg','.jpg','.png','.gif','.bmp','.tiff'],
+    audio: ['.mp3','.wav','.aac','.flac','.ogg'],
+    doc: ['.ppt','.pptx','.pdf']
 }
 
-function findFiles(directory, allowedExtensions, category) {
-    let files = [];
-
+async function getFiles(category) {
     try {
-        const items = fs.readdirSync(directory, { withFileTypes: true });
-
-        items.forEach(item => {
-            const fullPath = path.join(directory, item.name);
-            const hiddenFolder = fullPath.split(path.sep).pop().split("").shift() == '.';
-            const depth = fullPath.split(path.sep).length <= 9;
-
-            if(item.isDirectory() && !hiddenFolder && depth && fs.existsSync(fullPath)) {
-                files = files.concat(findFiles(fullPath, allowedExtensions, category));
-            } 
-            else {
-                const stats = fs.statSync(fullPath);
-                const size = stats.size;
-                const extname = path.extname(fullPath).toLowerCase();
-                if(allowedExtensions.includes(extname)) {
-                    files.push({
-                        name: path.basename(fullPath, extname),
-                        path: fullPath,
-                        extension: extname,
-                        folder: path.dirname(fullPath).split(path.sep).pop(),
-                        size: (size / (1024 ** 2)).toFixed(2),
-                        category: category
-                    });
-                }
-            }
+        const folders = await getFolders();
+        
+        const promises = folders.map(folder => {
+            return readFiles(folder.fullPath);
         });
-    } catch (err) {
-        console.error('Erro ao ler o diretório:', err);
+        const files = await Promise.all(promises);
+        
+        return getFilesByFolder(folders, files, category);
     }
+    catch (error) {
+        throw error;
+    }
+}
 
-    return files;
+function readFiles(folder) {
+    return new Promise((resolve, reject) => {
+        fs.readdir(folder, { withFileTypes: true }, (error, items) => {
+            if(error) reject(error);
+            
+            const files = items.map(item => {
+                if(item.isFile()) {
+                    const fullPath = path.join(folder, item.name);
+                    const stats = fs.statSync(fullPath);
+    
+                    return {
+                        name: item.name,
+                        path: fullPath,
+                        extension: path.extname(fullPath).toLowerCase(),
+                        size: stats.size,
+                    };
+                }
+                return 'folder';
+            })
+            const isFiles = files.filter(file => file !== 'folder');
+            resolve(isFiles);
+        });
+    })
+}
+
+function getFilesByFolder(folders, files, category) {
+    const allowedExtensions = extensions[category];
+    const filesByFolder = {};
+    folders.map((folder, index) => {
+        filesByFolder[folder.name] = files[index]
+        .filter(file => allowedExtensions.includes(file.extension));
+    })
+    const clearList = {};
+    for(let folder in filesByFolder) {
+        if(filesByFolder[folder].length > 0) {
+            clearList[folder] = filesByFolder[folder];
+        }
+    }
+    return clearList;
 }
 
 module.exports = getFiles;
