@@ -50,7 +50,7 @@ function createWindow() {
 
 function createHiddenWindow(windowPrimary) {
     const win = new BrowserWindow()
-    win.hide();
+    // win.hide();
     win.loadFile(path.join(__dirname, 'src/pages/media/index.html'));
 
     windowPrimary.on('closed', () => {
