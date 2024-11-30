@@ -65,7 +65,9 @@ function readFolder(folder) {
             const folders = [];
             items.forEach(item => {
                 const firstLetter = item.name.split("").shift();
-                if(item.name !== 'AppData' && item.name !== 'thumb' && item.name !== 'Contacts' && item.name !== 'node_modules' && item.isDirectory() && firstLetter !== '.' && firstLetter !== '@' && firstLetter !== '-' && !(+firstLetter >= 0 && +firstLetter <= 9) && firstLetter !== '#' && firstLetter !== '_') {
+                const notNameFolder = ['AppData','thumb','Contacts','node_modules'];
+                const notFirstLetter = ['.','@','-','#','_'];
+                if(item.isDirectory() && !notNameFolder.includes(item.name) && !notFirstLetter.includes(firstLetter) && !(+firstLetter >= 0 && +firstLetter <= 9)) {
                     folders.push({...item, fullPath: `${item.path}${path.sep}${item.name}`});
                 }
             })

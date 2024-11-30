@@ -1,5 +1,13 @@
 @import url(../../global.css);
 
+#sync {
+    padding: 10px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
 #list-folder {
     width: 700px;
     height: calc(90vh - var(--headerSize) - var(--footerSize));

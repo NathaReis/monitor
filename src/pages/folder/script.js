@@ -1,69 +1,82 @@
 const $listFolder = document.querySelector("#list-folder");
 const category = new URLSearchParams(location.search).get('category');
 
-async function loadFile() {
-    try {
-        $listFolder.innerHTML = '';
-        const files = await api.getFiles(category);
-        
+async function loadFile(sync) {
+    try {        
+        const files = await getFiles(sync);
         if(files) {
             const $categoryHeader = document.querySelector("#category-header");
             $categoryHeader.innerHTML = category + '/';
             $categoryHeader.href = `./index.html?category=${category}`;
-    
-            for(let folder in files) {
-                const box = document.createElement("div");
-                box.classList.add("box");
-                box.onclick = () => {
-                    const $folderHeader = document.querySelector("#folder-header");
-                    $folderHeader.innerHTML = folder + '/';
-                    $folderHeader.href = `./index.html?category=${category}&folder=${folder}`;
-            
-                    getFiles(files[folder]);
-                }
-    
-                const svg = 
-                    `<div class="box-svg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-folder2" viewBox="0 0 16 16">
-                            <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5zM2.5 3a.5.5 0 0 0-.5.5V6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3zM14 7H2v5.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5z"/>
-                        </svg>
-                    </div>`;
-                box.innerHTML += svg;
-    
-                const h1 = document.createElement("h1");
-                h1.classList.add("titleFolder");
-                h1.innerHTML = folder;
-                box.appendChild(h1);
-    
-                const qtd = document.createElement("h1");
-                qtd.innerHTML = `(${files[folder].length})`;
-                box.appendChild(qtd);
-
-                $listFolder.appendChild(box);
-            }
-    
-            const folder = new URLSearchParams(location.search).get('folder');
-            if(folder) {
-                const $boxes = document.querySelectorAll(".box");
-                for(let box of $boxes) {
-                    if(box.querySelector("h1").innerHTML === folder) {
-                        const $folderHeader = document.querySelector("#folder-header");
-                        $folderHeader.innerHTML = folder + '/';
-                        $folderHeader.href = `./index.html?category=${category}&folder=${folder}`;
-                        getFiles(files[folder]);
-                        break;
-                    }
-                }
-            }
+            renderFiles(files);
         }
     }
     catch (error) {
-        alert(error);
+        console.error("Erro loadFile");
         console.error(error);
     }
 }
 
-function getFiles(files) {
+async function getFiles(sync) {
+    try {
+        $listFolder.innerHTML = '';
+        sync ? localStorage.removeItem(category) : null; // remove cache para atualizar
+        const localFiles = JSON.parse(localStorage.getItem(category)); // busca o cache
+        const files = localFiles ? localFiles : await api.getFiles(category); // se o cache existir usa ele se não busca do sistema
+        !localFiles ? localStorage.setItem(category, JSON.stringify(files)) : null; // se o cache não existe cria ele
+        return files;
+    }
+    catch (error) {
+        console.error("Erro getFiles");
+        throw error;
+    }
+}
+
+function renderFiles(files) {
+    for(let folder in files) {
+        const box = document.createElement("div");
+        box.classList.add("box");
+        box.onclick = () => location = `./index.html?category=${category}&folder=${folder}`;
+
+        const svg = 
+            `<div class="box-svg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-folder2" viewBox="0 0 16 16">
+                    <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5zM2.5 3a.5.5 0 0 0-.5.5V6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3zM14 7H2v5.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5z"/>
+                </svg>
+            </div>`;
+        box.innerHTML += svg;
+
+        const h1 = document.createElement("h1");
+        h1.classList.add("titleFolder");
+        h1.innerHTML = folder;
+        box.appendChild(h1);
+
+        const qtd = document.createElement("h1");
+        qtd.innerHTML = `(${files[folder].length})`;
+        box.appendChild(qtd);
+
+        $listFolder.appendChild(box);
+    }
+    setFolder(files);
+}
+
+function setFolder(files) {
+    const folder = new URLSearchParams(location.search).get('folder');
+    if(folder) {
+        const $boxes = document.querySelectorAll(".box");
+        for(let box of $boxes) {
+            if(box.querySelector("h1").innerHTML === folder) {
+                const $folderHeader = document.querySelector("#folder-header");
+                $folderHeader.innerHTML = folder + '/';
+                $folderHeader.href = `./index.html?category=${category}&folder=${folder}`;
+                setFiles(files[folder]);
+                break;
+            }
+        }
+    }
+}
+
+function setFiles(files) {
     $listFolder.innerHTML = '';
     files.forEach(file => {
         const box = document.createElement("div");
