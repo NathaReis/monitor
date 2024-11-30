@@ -28,6 +28,7 @@ function setControl(control) {
                 // Habilitar visualização da imagem - Desabilitar visualização de vídeo e áudio
                 $image.classList.remove("remove");
                 $video.classList.add("remove");
+                localStorage.setItem("togglePlayAudio", 'false');
 
                 $stop.classList.add("remove");
                 $play.classList.add("remove");
@@ -46,6 +47,7 @@ function setControl(control) {
                 // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
                 $video.classList.remove("remove");
                 $image.classList.add("remove");
+                localStorage.setItem("togglePlayAudio", 'false');
 
                 $stop.classList.remove("remove");
                 $play.classList.remove("remove");
@@ -65,6 +67,11 @@ function setControl(control) {
                     $pause.classList.add("remove");
                 }
                 $stop.classList.remove("remove");
+
+
+                // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
+                $video.classList.add("remove");
+                $image.classList.add("remove");
                 break
         }
     
