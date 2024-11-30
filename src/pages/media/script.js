@@ -1,5 +1,4 @@
 const $audio = document.querySelector("audio");
-$audio.currentTime = +localStorage.getItem("time");
 
 window.addEventListener("storage", (event) => {
     const { newValue, key } = event;
@@ -22,7 +21,6 @@ function renderAudio(audio) {
 }
 
 function togglePlayAudio(active) {
-    localStorage.setItem("play", active ? 'true': 'false');
     active ? $audio.play() : $audio.pause();
 }
 
@@ -31,25 +29,11 @@ function stopAudio() {
     togglePlayAudio(false);
 }
 
-// Função para salvar o tempo no localStorage
-const saveTime = () => {
-    localStorage.setItem("time", $audio.currentTime.toString());
-};
+// Controle do áudio
+$audio.onplay = () => {
+    localStorage.setItem("play", 'true');
+}
 
-// Função para carregar o tempo do localStorage
-const loadTime = () => {
-    const savedTime = localStorage.getItem("time");
-    if (savedTime) {
-        $audio.currentTime = parseFloat(savedTime);
-    }
-};
-
-// Salvar o tempo sempre que houver uma atualização
-$audio.ontimeupdate = () => {
-    if($audio.currentTime === 0) {
-        loadTime();
-    }
-    else {
-        saveTime();
-    }
-};
+$audio.onpause = () => {
+    localStorage.setItem("play", 'false');
+}

@@ -80,7 +80,6 @@ function setFiles(files) {
         const box = document.createElement("div");
         box.classList.add("box");
         box.onclick = () => {
-            localStorage.removeItem("play");
             setControl({file, files, index: files.indexOf(file), active: true});
         }
 

@@ -51,22 +51,20 @@ function setControl(control) {
                 $play.classList.remove("remove");
                 $pause.classList.add("remove");
                 break 
-            case 'audio':
-                localStorage.setItem("renderAudio", JSON.stringify(file));
-
+            case 'audio':  
                 const playLocal = localStorage.getItem("play");
-                if(playLocal === 'true') {
-                    localStorage.setItem("togglePlayAudio", 'true');
+                const controlLocal = JSON.parse(localStorage.getItem("control"));
+
+                if(playLocal === 'true' && file.path === controlLocal.file.path) {
                     $pause.classList.remove("remove");  
                     $play.classList.add("remove");
                 }
                 else {
-                    localStorage.setItem("togglePlayAudio", 'false');
+                    localStorage.setItem("renderAudio", JSON.stringify(file));
                     $play.classList.remove("remove");
                     $pause.classList.add("remove");
                 }
                 $stop.classList.remove("remove");
-
                 break
         }
     
