@@ -65,8 +65,8 @@ function setControl(control) {
                 }
                 else {
                     localStorage.setItem("renderAudio", JSON.stringify(file));
-                    renderAudio();
                 }
+                renderAudio();
                 $stop.classList.remove("remove");
 
                 // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
