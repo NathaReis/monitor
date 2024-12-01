@@ -56,15 +56,18 @@ $audio.ontimeupdate = () => {
         if(modeLocal && modeLocal.mode !== 'disabled') {
             if(modeLocal.mode === 'repeat') {
                 localStorage.setItem("nextFile", 'true');
-                return
             }
-            if(modeLocal.mode === 'repeat-one') {
+            else if(modeLocal.mode === 'repeat-one') {
                 $audio.currentTime = 0;
                 $audio.play();
-                return
+            }
+            else {
+                stopAudio();
             }
         }
-        stopAudio();
+        else {
+            stopAudio();
+        }
     }
 }
 
