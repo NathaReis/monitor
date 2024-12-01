@@ -70,7 +70,7 @@ header {
 
         svg {
             width: 30px;
-            fill: var(--primary);
+            fill: var(--show);
         }
     }
 }
@@ -138,6 +138,109 @@ footer {
             min-height: 100vh;
             border-radius: 0;
             cursor: zoom-out;
+        }
+
+        #audio {
+            height: calc(100vh - var(--headerSize) - var(--footerSize) - 100px);
+            padding: 20px;
+            border-radius: 30px;
+            display: grid;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px #0004;
+
+            #image-audio {
+                max-width: 400px;
+                width: 60vw;
+                display: grid;
+                align-items: center;
+                justify-content: center;
+
+                svg {
+                    width: 250px;
+                    fill: var(--primary);
+                }
+            }
+
+            
+            #progress-audio-box {
+                position: relative;
+                max-width: 400px;
+                width: 60vw;
+                display: grid;
+                align-items: center;
+                justify-content: center;
+                
+                input {
+                    max-width: 350px;
+                    width: 55vw;
+                    padding: 10px;
+                    cursor: pointer;
+                }
+                
+                span {
+                    position: absolute;
+                    left: 0;
+                    top: -1rem;
+                    height: 1rem;
+                    color: #fff;
+                }
+                span#duration {
+                    right: 0;
+                    left: auto;
+                }
+            }
+
+            .buttons {
+                max-width: 400px;
+                width: 60vw;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            #audio-volume-box {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 20px;
+                width: 30vw;
+                max-width: 300px;
+
+                button {
+                    cursor: default;
+                }
+                button:hover {
+                    box-shadow: 5px 5px 10px #0003;
+                }
+
+                input {
+                    width: 100%;
+                }
+            }
+
+            button {
+                background-color: var(--primary);
+                border: none;
+                outline: none;
+                border: 2px solid var(--show);
+                cursor: pointer;
+                box-shadow: 5px 5px 10px #0003;
+                padding: 10px;
+                border-radius: 50%;
+
+                svg {
+                    width: 25px;
+                    fill: var(--show);
+                }
+
+                svg.disabled {
+                    opacity: .7;
+                }
+            }
+            button:hover {
+                box-shadow: 2.5px 2.5px 5px #0003;
+            }
         }
     }
 

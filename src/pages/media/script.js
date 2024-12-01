@@ -37,3 +37,10 @@ $audio.onplay = () => {
 $audio.onpause = () => {
     localStorage.setItem("play", 'false');
 }
+
+$audio.ontimeupdate = () => {
+    localStorage.setItem("time", $audio.currentTime.toString());
+    if($audio.currentTime === $audio.duration) {
+        stopAudio();
+    }
+}

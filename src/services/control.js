@@ -2,6 +2,7 @@
 const $title = document.querySelector("#title");
 const $image = document.querySelector("#image");
 const $video = document.querySelector("#video");
+const $audio = document.querySelector("#audio");
 const $play = document.querySelector("#play");
 const $pause = document.querySelector("#pause");
 const $stop = document.querySelector("#stop");
@@ -28,6 +29,7 @@ function setControl(control) {
                 // Habilitar visualização da imagem - Desabilitar visualização de vídeo e áudio
                 $image.classList.remove("remove");
                 $video.classList.add("remove");
+                $audio.classList.add("remove");
                 localStorage.setItem("togglePlayAudio", 'false');
 
                 $stop.classList.add("remove");
@@ -47,6 +49,7 @@ function setControl(control) {
                 // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
                 $video.classList.remove("remove");
                 $image.classList.add("remove");
+                $audio.classList.add("remove");
                 localStorage.setItem("togglePlayAudio", 'false');
 
                 $stop.classList.remove("remove");
@@ -70,6 +73,7 @@ function setControl(control) {
 
 
                 // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
+                $audio.classList.remove("remove");
                 $video.classList.add("remove");
                 $image.classList.add("remove");
                 break
@@ -121,5 +125,8 @@ $pause.onclick = (e) => play(e, false);
 
 // Desativar toggle do footer ao clicar no contol
 $controls.onclick = (e) => {
+    e.stopPropagation();
+}
+$audio.onclick = (e) => {
     e.stopPropagation();
 }
