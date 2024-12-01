@@ -6,6 +6,7 @@
     outline: none;
     cursor: pointer;
     font-size: 1rem;
+    margin-left: 50px;
 }
 
 #list-folder {

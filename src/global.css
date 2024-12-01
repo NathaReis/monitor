@@ -216,6 +216,7 @@ footer {
 
                 input {
                     width: 100%;
+                    cursor: pointer;
                 }
             }
 
@@ -235,7 +236,7 @@ footer {
                 }
 
                 svg.disabled {
-                    opacity: .7;
+                    opacity: .3;
                 }
             }
             button:hover {

@@ -18,6 +18,9 @@ window.addEventListener("storage", (event) => {
         $audio.currentTime = newValue;
         localStorage.removeItem(key);
     }
+    if(key === 'volume') {
+        $audio.volume = parseFloat(parseInt(newValue) / 10);
+    }
 })
 
 function renderAudio(audio) {
@@ -49,6 +52,26 @@ $audio.onpause = () => {
 $audio.ontimeupdate = () => {
     localStorage.setItem("time", $audio.currentTime.toFixed(2).toString());
     if($audio.currentTime === $audio.duration) {
+        const modeLocal = JSON.parse(localStorage.getItem("mode"));
+        if(modeLocal && modeLocal.mode !== 'disabled') {
+            if(modeLocal.mode === 'repeat') {
+                localStorage.setItem("nextFile", 'true');
+                return
+            }
+            if(modeLocal.mode === 'repeat-one') {
+                $audio.currentTime = 0;
+                $audio.play();
+                return
+            }
+        }
         stopAudio();
     }
 }
+
+function setVolumeLocal() {
+    const volume = localStorage.getItem("volume");
+    if(volume) {
+        $audio.volume = parseFloat(parseInt(volume) / 10);
+    }
+}
+setVolumeLocal();
