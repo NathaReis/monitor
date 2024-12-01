@@ -28,6 +28,7 @@ function renderAudio(audio) {
     $audio.volume = 0.5;
     setTimeout(() => {
         localStorage.setItem("duration", $audio.duration.toFixed(2).toString());
+        setVolumeLocal();
     }, 1000);
 }
 
