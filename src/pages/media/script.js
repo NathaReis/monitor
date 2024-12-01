@@ -14,10 +14,18 @@ window.addEventListener("storage", (event) => {
         stopAudio();
         localStorage.removeItem(key);
     }
+    if(key === 'newTimeAudio') {
+        $audio.currentTime = newValue;
+        localStorage.removeItem(key);
+    }
 })
 
 function renderAudio(audio) {
     $audio.src = audio.path;
+    $audio.volume = 0.5;
+    setTimeout(() => {
+        localStorage.setItem("duration", $audio.duration.toFixed(2).toString());
+    }, 1000);
 }
 
 function togglePlayAudio(active) {
@@ -39,7 +47,7 @@ $audio.onpause = () => {
 }
 
 $audio.ontimeupdate = () => {
-    localStorage.setItem("time", $audio.currentTime.toString());
+    localStorage.setItem("time", $audio.currentTime.toFixed(2).toString());
     if($audio.currentTime === $audio.duration) {
         stopAudio();
     }

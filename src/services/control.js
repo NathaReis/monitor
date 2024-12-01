@@ -30,7 +30,7 @@ function setControl(control) {
                 $image.classList.remove("remove");
                 $video.classList.add("remove");
                 $audio.classList.add("remove");
-                localStorage.setItem("togglePlayAudio", 'false');
+                playAudio(false, true);
 
                 $stop.classList.add("remove");
                 $play.classList.add("remove");
@@ -50,7 +50,7 @@ function setControl(control) {
                 $video.classList.remove("remove");
                 $image.classList.add("remove");
                 $audio.classList.add("remove");
-                localStorage.setItem("togglePlayAudio", 'false');
+                playAudio(false, true);
 
                 $stop.classList.remove("remove");
                 $play.classList.remove("remove");
@@ -70,6 +70,7 @@ function setControl(control) {
                     $pause.classList.add("remove");
                 }
                 $stop.classList.remove("remove");
+                renderAudio(file);
 
 
                 // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
@@ -106,22 +107,67 @@ function nextFile(e) {
 }
 document.querySelector("#nextFile").onclick = (e) => nextFile(e);
 
-function stop(e) {
-    e.stopPropagation();
+function stopAudio() {
     localStorage.setItem("stopAudio", 'true');
     $play.classList.remove("remove");
     $pause.classList.add("remove");
 }
-$stop.onclick = (e) => stop(e)
+$stop.onclick = () => stopAudio()
 
-function play(e, active) {
-    e.stopPropagation();
+function playAudio(active, disable=false) {
     localStorage.setItem("togglePlayAudio", active ? 'true' : 'false');
-    $play.classList.toggle("remove");
-    $pause.classList.toggle("remove");
+    if(!disable) {
+        $play.classList.toggle("remove");
+        $pause.classList.toggle("remove");
+    }// Validação quando a função é chamada pela categoria de imagem ou vídeo (validar sua necessidade quando renderizar o vídeo)
 }
-$play.onclick = (e) => play(e, true);
-$pause.onclick = (e) => play(e, false);
+$play.onclick = () => playAudio(true);
+$pause.onclick = () => playAudio(false);
+
+// RENDER AUDIO
+const $progressAudio = document.querySelector("#progress-audio");
+const $progressAudioVolume = document.querySelector("#progress-audio-volume");
+
+function renderAudio() {
+    const $duration = document.querySelector("#duration");
+    $duration.innerHTML = '00:00';
+    setTimeout(() => {
+        const durationLocal = Number(localStorage.getItem("duration")).toFixed(2);
+        $duration.innerHTML = `${formateTime(durationLocal/60)}:${formateTime(durationLocal%60)}`;
+        $progressAudio.max = durationLocal;
+    }, 1100); // Esperar um segundo, porque a media espera um segundo para configurar a duração
+}
+
+$progressAudio.onmousedown = () => {
+    playAudio(false);
+}
+$progressAudio.onmouseup = () => {
+    setTimeout(() => {
+        playAudio(true);
+    },200);// Esperar para renderizar o novo valor de tempo antes de continuar
+}
+$progressAudio.oninput = () => {
+    localStorage.setItem("newTimeAudio", $progressAudio.value.toString());
+}
+
+window.addEventListener("storage", (event) => {
+    const { newValue, key } = event;
+    if(key === 'time') {
+        const $duration = document.querySelector("#duration");
+        const $currentTime = document.querySelector("#current-time");
+        $currentTime.innerHTML = `${formateTime(newValue/60)}:${formateTime(newValue%60)}`;
+        $progressAudio.value = newValue;
+
+        if($currentTime.innerHTML === $duration.innerHTML) {
+            setControl(JSON.parse(localStorage.getItem("control")));
+        }
+    }
+})
+
+function formateTime(time) {
+    time = parseInt(time);
+    return time < 10 ? `0${(time)}` : time;
+}
 
 // Desativar toggle do footer ao clicar no contol
 $controls.onclick = (e) => {

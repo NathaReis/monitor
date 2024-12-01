@@ -30,8 +30,8 @@ app.on('window-all-closed', () => {
 
 function createWindow() {
     const win = new BrowserWindow({
-        minWidth: 800,
-        minHeight: 600,
+        // minWidth: 800,
+        // minHeight: 600,
         frame: true,
         autoHideMenuBar: false,
         webPreferences: {
@@ -50,7 +50,7 @@ function createWindow() {
 
 function createHiddenWindow(windowPrimary) {
     const win = new BrowserWindow()
-    win.hide();
+    // win.hide();
     win.loadFile(path.join(__dirname, 'src/pages/media/index.html'));
 
     windowPrimary.on('closed', () => {
