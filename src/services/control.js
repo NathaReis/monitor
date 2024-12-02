@@ -200,7 +200,8 @@ window.addEventListener("storage", (event) => {
         $progressAudio.value = newValue;
 
         if($currentTime.innerHTML === $duration.innerHTML) {
-            setControl(JSON.parse(localStorage.getItem("control")));
+            $play.classList.remove("remove");
+            $pause.classList.add("remove");
         }
     }
     if(key === 'nextFile') {
@@ -248,7 +249,7 @@ function setMode(modeIndex) {
     modeData[modeIndex].icon.classList.remove("remove");
     modeData[modeIndex].action();
 }
-setMode(JSON.parse(localStorage.getItem("mode")).index);
+setMode(JSON.parse(localStorage.getItem("mode"))?.index);
 
 function nextMode() {
     let nextModeIndex = JSON.parse(localStorage.getItem("mode")).index;

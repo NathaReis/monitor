@@ -38,6 +38,7 @@ function togglePlayAudio(active) {
 
 function stopAudio() {
     $audio.currentTime = 0;
+    localStorage.setItem("time", '0');
     togglePlayAudio(false);
 }
 

@@ -142,6 +142,7 @@ footer {
 
         #audio {
             height: calc(100vh - var(--headerSize) - var(--footerSize) - 100px);
+            max-height: 500px;
             padding: 20px;
             border-radius: 30px;
             display: grid;
