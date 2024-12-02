@@ -56,7 +56,7 @@ function setControl(control) {
                 $pause.classList.add("remove");
                 break 
             case 'audio':  
-                const playLocal = localStorage.getItem("play");
+                const playLocal = localStorage.getItem("playAudio");
                 const controlLocal = JSON.parse(localStorage.getItem("control"));
 
                 if(playLocal === 'true' && file.path === controlLocal.file.path) {
@@ -131,7 +131,7 @@ function renderAudio() {
     const $duration = document.querySelector("#duration");
     $duration.innerHTML = '00:00';
     setTimeout(() => {
-        const durationLocal = Number(localStorage.getItem("duration")).toFixed(2);
+        const durationLocal = Number(localStorage.getItem("durationAudio")).toFixed(2);
         $duration.innerHTML = `${formateTime(durationLocal/60)}:${formateTime(durationLocal%60)}`;
         $progressAudio.max = durationLocal;
     }, 1100); // Esperar um segundo, porque a media espera um segundo para configurar a duração
@@ -156,11 +156,11 @@ $progressAudioVolume.oninput = () => {
 }
 function setVolume(volume) {
     iconVolume(volume);
-    localStorage.setItem("volume", volume.toString());
+    localStorage.setItem("volumeAudio", volume.toString());
     $progressAudioVolume.value = volume
 }
 function setVolumeLocal() {
-    const volume = localStorage.getItem("volume");
+    const volume = localStorage.getItem("volumeAudio");
     if(volume) {
         iconVolume(parseInt(volume));
         $progressAudioVolume.value = parseInt(volume);
@@ -193,7 +193,7 @@ function iconVolume(volume) {
 // Controle de eventos storage
 window.addEventListener("storage", (event) => {
     const { newValue, key } = event;
-    if(key === 'time') {
+    if(key === 'timeAudio') {
         const $duration = document.querySelector("#duration");
         const $currentTime = document.querySelector("#current-time");
         $currentTime.innerHTML = `${formateTime(newValue/60)}:${formateTime(newValue%60)}`;
@@ -204,7 +204,7 @@ window.addEventListener("storage", (event) => {
             $pause.classList.add("remove");
         }
     }
-    if(key === 'nextFile') {
+    if(key === 'nextFileAudio') {
         nextFile();
         setTimeout(() => {
             playAudio(true);
@@ -223,19 +223,19 @@ const modeData = [
     {
         icon: $modeAudio.querySelector("#mode-disabled"),
         action: () => {
-            localStorage.setItem("mode", JSON.stringify({index: 0, mode: 'disabled'}));
+            localStorage.setItem("modeAudio", JSON.stringify({index: 0, mode: 'disabled'}));
         }
     },
     {
         icon: $modeAudio.querySelector("#mode-repeat"),
         action: () => {
-            localStorage.setItem("mode", JSON.stringify({index: 1, mode: 'repeat'}))
+            localStorage.setItem("modeAudio", JSON.stringify({index: 1, mode: 'repeat'}))
         }
     },    
     {
         icon: $modeAudio.querySelector("#mode-repeat-one"),
         action: () => {
-            localStorage.setItem("mode", JSON.stringify({index: 2, mode: 'repeat-one'}));
+            localStorage.setItem("modeAudio", JSON.stringify({index: 2, mode: 'repeat-one'}));
         }
     }
 ]
@@ -249,10 +249,10 @@ function setMode(modeIndex) {
     modeData[modeIndex].icon.classList.remove("remove");
     modeData[modeIndex].action();
 }
-setMode(JSON.parse(localStorage.getItem("mode"))?.index);
+setMode(JSON.parse(localStorage.getItem("modeAudio"))?.index);
 
 function nextMode() {
-    let nextModeIndex = JSON.parse(localStorage.getItem("mode")).index;
+    let nextModeIndex = JSON.parse(localStorage.getItem("modeAudio")).index;
     if(++nextModeIndex === modeData.length) {
         nextModeIndex = 0;
     }

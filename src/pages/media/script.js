@@ -18,7 +18,7 @@ window.addEventListener("storage", (event) => {
         $audio.currentTime = newValue;
         localStorage.removeItem(key);
     }
-    if(key === 'volume') {
+    if(key === 'volumeAudio') {
         $audio.volume = parseFloat(parseInt(newValue) / 10);
     }
 })
@@ -27,7 +27,7 @@ function renderAudio(audio) {
     $audio.src = audio.path;
     $audio.volume = 0.5;
     setTimeout(() => {
-        localStorage.setItem("duration", $audio.duration.toFixed(2).toString());
+        localStorage.setItem("durationAudio", $audio.duration.toFixed(2).toString());
         setVolumeLocal();
     }, 1000);
 }
@@ -38,26 +38,26 @@ function togglePlayAudio(active) {
 
 function stopAudio() {
     $audio.currentTime = 0;
-    localStorage.setItem("time", '0');
+    localStorage.setItem("timeAudio", '0');
     togglePlayAudio(false);
 }
 
 // Controle do áudio
 $audio.onplay = () => {
-    localStorage.setItem("play", 'true');
+    localStorage.setItem("playAudio", 'true');
 }
 
 $audio.onpause = () => {
-    localStorage.setItem("play", 'false');
+    localStorage.setItem("playAudio", 'false');
 }
 
 $audio.ontimeupdate = () => {
-    localStorage.setItem("time", $audio.currentTime.toFixed(2).toString());
+    localStorage.setItem("timeAudio", $audio.currentTime.toFixed(2).toString());
     if($audio.currentTime === $audio.duration) {
-        const modeLocal = JSON.parse(localStorage.getItem("mode"));
+        const modeLocal = JSON.parse(localStorage.getItem("modeAudio"));
         if(modeLocal && modeLocal.mode !== 'disabled') {
             if(modeLocal.mode === 'repeat') {
-                localStorage.setItem("nextFile", 'true');
+                localStorage.setItem("nextFileAudio", 'true');
             }
             else if(modeLocal.mode === 'repeat-one') {
                 $audio.currentTime = 0;
@@ -74,7 +74,7 @@ $audio.ontimeupdate = () => {
 }
 
 function setVolumeLocal() {
-    const volume = localStorage.getItem("volume");
+    const volume = localStorage.getItem("volumeAudio");
     if(volume) {
         $audio.volume = parseFloat(parseInt(volume) / 10);
     }
