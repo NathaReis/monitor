@@ -124,11 +124,14 @@ footer {
             width: 50vw;
             max-width: 1000px;
             max-height: calc(100vh - (var(--headerSize)*2) - var(--footerSize) - 50px);
-            cursor: zoom-in;
             background-color: #000;
             border-radius: 20px;
+            cursor: default;
         }
-        #image.full, #video.full {
+        #image {
+            cursor: zoom-in;
+        }
+        #image.full {
             position: absolute;
             left: 0;
             top: 0;

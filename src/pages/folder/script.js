@@ -80,7 +80,7 @@ function setFiles(files) {
         const box = document.createElement("div");
         box.classList.add("box");
         box.onclick = () => {
-            playAudio(false);
+            play(false);
             setControl({file, files, index: files.indexOf(file), active: true});
         }
 

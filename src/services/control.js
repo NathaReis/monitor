@@ -38,9 +38,15 @@ function setControl(control) {
                 break 
             case 'video':
                 $video.src = file.path;
-                $video.onclick = (e) => {
-                    e.stopPropagation();
-                    $video.classList.toggle("full");
+
+                $video.onplay = () => {
+                    localStorage.setItem("videoPlay", 'true');
+                }
+                $video.onpause = () => {
+                    localStorage.setItem("videoPlay", 'false');
+                }
+                $video.ontimeupdate = () => {
+                    localStorage.setItem("videoTime", $video.currentTime.toString());
                 }
 
                 if(active) {
@@ -51,9 +57,30 @@ function setControl(control) {
                 $image.classList.add("remove");
                 $audio.classList.add("remove");
 
+                const videoPlay = localStorage.getItem("videoPlay");
+                const videoTime = localStorage.getItem("videoTime");
+
+                if(videoPlay && videoTime) {
+                    if(videoTime) {
+                        $video.currentTime = videoTime;
+                    }
+
+                    if(videoPlay === 'true') {
+                        $video.play();
+                        $play.classList.add("remove");
+                        $pause.classList.remove("remove");
+                    }
+                    else {
+                        $video.pause();
+                        $play.classList.remove("remove");
+                        $pause.classList.add("remove");       
+                    }
+                }
+                else {
+                    $play.classList.remove("remove");
+                    $pause.classList.add("remove");
+                }
                 $stop.classList.remove("remove");
-                $play.classList.remove("remove");
-                $pause.classList.add("remove");
                 break 
             case 'audio':  
                 const playLocal = localStorage.getItem("playAudio");
@@ -66,7 +93,7 @@ function setControl(control) {
                 else {
                     localStorage.setItem("renderAudio", JSON.stringify(file));
                 }
-                renderAudio();
+                defineDuration();
                 $stop.classList.remove("remove");
 
                 // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
@@ -84,7 +111,7 @@ setControl(JSON.parse(localStorage.getItem("control")));
 function backFile() {
     const controlLocal = JSON.parse(localStorage.getItem("control"));
     if(controlLocal) {
-        playAudio(false);
+        play(false);
         const { files, index } = controlLocal;
         const newIndex = index - 1 < 0 ? files.length - 1 : index - 1;
         setControl({file: files[newIndex], files, index: newIndex});
@@ -95,7 +122,7 @@ document.querySelector("#backFile").onclick = () => backFile();
 function nextFile() {
     const controlLocal = JSON.parse(localStorage.getItem("control"));
     if(controlLocal) {
-        playAudio(false);
+        play(false);
         const { files, index } = controlLocal;
         const newIndex = index + 1 === files.length ? 0 : index + 1;
         setControl({file: files[newIndex], files, index: newIndex});
@@ -103,31 +130,54 @@ function nextFile() {
 }
 document.querySelector("#nextFile").onclick = () => nextFile();
 
-function stopAudio() {
-    localStorage.setItem("stopAudio", 'true');
-    playAudio(false);
+function stop() {
+    const control = JSON.parse(localStorage.getItem("control"));
+    if(control) {
+        if(control.file.category === 'audio') {
+            localStorage.setItem("stopAudio", 'true');
+        }
+        else {
+            $video.currentTime = 0;
+        }
+    }
+    play(false);
 }
-$stop.onclick = () => stopAudio()
+$stop.onclick = () => stop()
 
-function playAudio(active) {
-    localStorage.setItem("togglePlayAudio", active ? 'true' : 'false');
-    if(active) {
-        $play.classList.add("remove");
-        $pause.classList.remove("remove");
-    }
-    else {
-        $play.classList.remove("remove");
-        $pause.classList.add("remove");
+function play(active) {
+    const control = JSON.parse(localStorage.getItem("control"));
+    if(control) {
+        if(active) {
+            $play.classList.add("remove");
+            $pause.classList.remove("remove");
+
+            if(control.file.category === 'audio') {
+                localStorage.setItem('togglePlayAudio', 'true');
+            }
+            else {
+                $video.play();
+            }
+        }
+        else {
+            $play.classList.remove("remove");
+            $pause.classList.add("remove");
+            if(control.file.category === 'audio') {
+                localStorage.setItem('togglePlayAudio', 'false');
+            }
+            else {
+                $video.pause();
+            }    
+        }
     }
 }
-$play.onclick = () => playAudio(true);
-$pause.onclick = () => playAudio(false);
+$play.onclick = () => play(true);
+$pause.onclick = () => play(false);
 
 // RENDER AUDIO
 const $progressAudio = document.querySelector("#progress-audio");
 const $progressAudioVolume = document.querySelector("#progress-audio-volume");
 
-function renderAudio() {
+function defineDuration() {
     const $duration = document.querySelector("#duration");
     $duration.innerHTML = '00:00';
     setTimeout(() => {
@@ -138,11 +188,11 @@ function renderAudio() {
 }
 
 $progressAudio.onmousedown = () => {
-    playAudio(false);
+    play(false);
 }
 $progressAudio.onmouseup = () => {
     setTimeout(() => {
-        playAudio(true);
+        play(true);
     },200);// Esperar para renderizar o novo valor de tempo antes de continuar
 }
 $progressAudio.oninput = () => {
@@ -207,7 +257,7 @@ window.addEventListener("storage", (event) => {
     if(key === 'nextFileAudio') {
         nextFile();
         setTimeout(() => {
-            playAudio(true);
+            play(true);
         },200);
         localStorage.removeItem(key);
     }
@@ -266,5 +316,8 @@ $controls.onclick = (e) => {
     e.stopPropagation();
 }
 $audio.onclick = (e) => {
+    e.stopPropagation();
+}
+$video.onclick = (e) => {
     e.stopPropagation();
 }

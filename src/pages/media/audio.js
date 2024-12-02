@@ -28,7 +28,7 @@ function renderAudio(audio) {
     $audio.volume = 0.5;
     setTimeout(() => {
         localStorage.setItem("durationAudio", $audio.duration.toFixed(2).toString());
-        setVolumeLocal();
+        setVolumeLocalAudio();
     }, 1000);
 }
 
@@ -73,10 +73,10 @@ $audio.ontimeupdate = () => {
     }
 }
 
-function setVolumeLocal() {
+function setVolumeLocalAudio() {
     const volume = localStorage.getItem("volumeAudio");
     if(volume) {
         $audio.volume = parseFloat(parseInt(volume) / 10);
     }
 }
-setVolumeLocal();
+setVolumeLocalAudio();
