@@ -11,9 +11,9 @@
 
 :root {
     --background: #2a2829;
-    --primary: #044040;
-    --show: #25d9ca;
-    --opacity: #1f8c8c;
+    --primary: #0097d3;
+    --show: #00ffff;
+    --opacity: #00597c;
     --headerSize: 70px;
     --footerSize: 80px;
 }
@@ -78,9 +78,9 @@ header {
 main {
     width: 100vw;
     height: calc(100vh - var(--headerSize) - var(--footerSize));
-    display: grid;
-    align-items: center;
-    justify-content: center;
+    display: flex;
+    align-items: start;
+    justify-content: left;
     overflow: hidden;
 }
 

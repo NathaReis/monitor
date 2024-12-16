@@ -1,6 +1,105 @@
 @import url(../../global.css);
 
-.box {
+#sync {
+    position: absolute;
+    top: calc(var(--headerSize)/2 - 15px);
+    right: 100px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: transparent;
+
+    svg {
+        fill: var(--show);
+        width: 30px;
+        height: 30px;
+    }
+}
+    
+#list-folder {
+    width: 50vw;
+    max-height: calc(100vh - (var(--headerSize) + var(--footerSize) + 20vh));
+    overflow: hidden auto;
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+    gap: 50px;
+    padding: 50px;
+    background-color: #0003;
+    border-radius: 20px;
+    margin: 50px;
+    border: none;
+
+    .box {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-basis: 300px;
+        flex-grow: 1;
+        background-color: #ffffff;
+        box-shadow: 0 0 10px #0002;
+        border-radius: 10px;
+        cursor: pointer;
+        padding: 0 10px 0 0;
+        gap: 10px;
+        overflow: hidden;
+
+        .box-svg {
+            min-width: 50px;
+            min-height: 50px;
+            background-color: #eee;
+            display: grid;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+
+            svg {
+                width: 25px;
+                fill: var(--primary);
+            }
+        }
+        
+        h1 {
+            z-index: 1;
+            margin-left: 15px;
+            font-size: .9rem;
+        }
+        h1.titleFolder {
+            max-width: 200px;
+            overflow: hidden;
+        }
+        h1.qtd {
+            font-size: .7rem;
+        }
+    }
+
+    .box:hover {
+        background-color: #eeeeee;
+        box-shadow: 0 0 10px #0002, 0 0 20px #0002, 0 0 50px #0002;
+
+        .box-svg {
+            background-color: #ddd;
+        }
+    }
+}
+
+#list-folder::-webkit-scrollbar {
+    width: 12px;               /* width of the entire scrollbar */
+}
+
+#list-folder::-webkit-scrollbar-track {
+    background: var(--primary);        /* color of the tracking area */
+}
+
+#list-folder::-webkit-scrollbar-thumb {
+    background-color: var(--show);    /* color of the scroll thumb */
+    border-radius: 5px;       /* roundness of the scroll thumb */
+    border: 3px solid var(--primary);  /* creates padding around scroll thumb */
+}
+
+/* Nav */
+#nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -10,8 +109,10 @@
     max-width: 500px;
     padding: 50px;
     border-radius: 30px;
+    background-color: var(--background);
     box-shadow: 10px 10px 15px #0003;
     border: none;
+    margin: 50px;
 
     .category, .folder {
         position: relative;

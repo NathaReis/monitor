@@ -35,6 +35,10 @@ function setControl(control) {
                 $stop.classList.add("remove");
                 $play.classList.add("remove");
                 $pause.classList.add("remove");
+                document.querySelector("#controls").classList.remove("remove");
+                // Limpando storage de vídeo
+                localStorage.removeItem("videoPlay");
+                localStorage.removeItem("videoTime");
                 break 
             case 'video':
                 $video.src = file.path;
@@ -61,26 +65,10 @@ function setControl(control) {
                 const videoTime = localStorage.getItem("videoTime");
 
                 if(videoPlay && videoTime) {
-                    if(videoTime) {
-                        $video.currentTime = videoTime;
-                    }
-
-                    if(videoPlay === 'true') {
-                        $video.play();
-                        $play.classList.add("remove");
-                        $pause.classList.remove("remove");
-                    }
-                    else {
-                        $video.pause();
-                        $play.classList.remove("remove");
-                        $pause.classList.add("remove");       
-                    }
+                    $video.currentTime = videoTime;
+                    $video.play();
                 }
-                else {
-                    $play.classList.remove("remove");
-                    $pause.classList.add("remove");
-                }
-                $stop.classList.remove("remove");
+                document.querySelector("#controls").classList.add("remove");
                 break 
             case 'audio':  
                 const playLocal = localStorage.getItem("playAudio");
@@ -100,6 +88,10 @@ function setControl(control) {
                 $audio.classList.remove("remove");
                 $video.classList.add("remove");
                 $image.classList.add("remove");
+                document.querySelector("#controls").classList.remove("remove");
+                // Limpando storage de vídeo
+                localStorage.removeItem("videoPlay");
+                localStorage.removeItem("videoTime");
                 break
         }
     
