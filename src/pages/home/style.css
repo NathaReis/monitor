@@ -18,6 +18,7 @@
     
 #list-folder {
     width: 50vw;
+    min-height: calc(100vh - (var(--headerSize) + var(--footerSize) + 20vh));
     max-height: calc(100vh - (var(--headerSize) + var(--footerSize) + 20vh));
     overflow: hidden auto;
     display: flex;
