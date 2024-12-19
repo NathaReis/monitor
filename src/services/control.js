@@ -2,12 +2,15 @@
 const $title = document.querySelector("#title");
 const $image = document.querySelector("#image");
 const $video = document.querySelector("#video");
-const $audio = document.querySelector("#audio");
+const $audioBox = document.querySelector("#audio");
+const $audio = document.querySelector("audio");
 const $play = document.querySelector("#play");
 const $pause = document.querySelector("#pause");
 const $stop = document.querySelector("#stop");
 const $controls = document.querySelector("#controls");
 const $modeAudio = document.querySelector("#mode-audio");
+const $progressAudio = document.querySelector("#progress-audio");
+const $progressAudioVolume = document.querySelector("#progress-audio-volume");
 
 function setControl(control) {
     if(control) {
@@ -30,7 +33,7 @@ function setControl(control) {
                 // Habilitar visualização da imagem - Desabilitar visualização de vídeo e áudio
                 $image.classList.remove("remove");
                 $video.classList.add("remove");
-                $audio.classList.add("remove");
+                $audioBox.classList.add("remove");
 
                 $stop.classList.add("remove");
                 $play.classList.add("remove");
@@ -41,16 +44,16 @@ function setControl(control) {
                 localStorage.removeItem("videoTime");
                 break 
             case 'video':
-                $video.src = file.path;
+                const player = new Plyr('#video');
+                const videoSource = document.querySelector("#video-source");
 
-                $video.onplay = () => {
-                    localStorage.setItem("videoPlay", 'true');
-                }
-                $video.onpause = () => {
-                    localStorage.setItem("videoPlay", 'false');
-                }
-                $video.ontimeupdate = () => {
-                    localStorage.setItem("videoTime", $video.currentTime.toString());
+                videoSource.src = file.path;
+                player.source = {
+                  type: 'video',
+                    sources: [{
+                        src: file.path,
+                        type: 'video/mp4'
+                    }]
                 }
 
                 if(active) {
@@ -59,33 +62,16 @@ function setControl(control) {
                 // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
                 $video.classList.remove("remove");
                 $image.classList.add("remove");
-                $audio.classList.add("remove");
+                $audioBox.classList.add("remove");
 
-                const videoPlay = localStorage.getItem("videoPlay");
-                const videoTime = localStorage.getItem("videoTime");
-
-                if(videoPlay && videoTime) {
-                    $video.currentTime = videoTime;
-                    $video.play();
-                }
                 document.querySelector("#controls").classList.add("remove");
                 break 
             case 'audio':  
-                const playLocal = localStorage.getItem("playAudio");
-                const controlLocal = JSON.parse(localStorage.getItem("control"));
-
-                if(playLocal === 'true' && file.path === controlLocal.file.path) {
-                    $pause.classList.remove("remove");  
-                    $play.classList.add("remove");
-                }
-                else {
-                    localStorage.setItem("renderAudio", JSON.stringify(file));
-                }
                 defineDuration();
                 $stop.classList.remove("remove");
-
+                $audio.src = file.path;
                 // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
-                $audio.classList.remove("remove");
+                $audioBox.classList.remove("remove");
                 $video.classList.add("remove");
                 $image.classList.add("remove");
                 document.querySelector("#controls").classList.remove("remove");
@@ -143,22 +129,13 @@ function play(active) {
             $play.classList.add("remove");
             $pause.classList.remove("remove");
 
-            if(control.file.category === 'audio') {
-                localStorage.setItem('togglePlayAudio', 'true');
-            }
-            else {
-                $video.play();
-            }
+            control.file.category === 'audio' ? $audio.play() : $video.play();
         }
         else {
             $play.classList.remove("remove");
             $pause.classList.add("remove");
-            if(control.file.category === 'audio') {
-                localStorage.setItem('togglePlayAudio', 'false');
-            }
-            else {
-                $video.pause();
-            }    
+
+            control.file.category === 'audio' ? $audio.pause() : $video.pause(); 
         }
     }
 }
@@ -166,17 +143,11 @@ $play.onclick = () => play(true);
 $pause.onclick = () => play(false);
 
 // RENDER AUDIO
-const $progressAudio = document.querySelector("#progress-audio");
-const $progressAudioVolume = document.querySelector("#progress-audio-volume");
-
 function defineDuration() {
     const $duration = document.querySelector("#duration");
-    $duration.innerHTML = '00:00';
-    setTimeout(() => {
-        const durationLocal = Number(localStorage.getItem("durationAudio")).toFixed(2);
-        $duration.innerHTML = `${formateTime(durationLocal/60)}:${formateTime(durationLocal%60)}`;
-        $progressAudio.max = durationLocal;
-    }, 1100); // Esperar um segundo, porque a media espera um segundo para configurar a duração
+    const durationLocal = $audio.duration.toFixed(2);
+    $duration.innerHTML = `${formateTime(durationLocal/60)}:${formateTime(durationLocal%60)}`;
+    $progressAudio.max = durationLocal;
 }
 
 $progressAudio.onmousedown = () => {
@@ -188,24 +159,55 @@ $progressAudio.onmouseup = () => {
     },200);// Esperar para renderizar o novo valor de tempo antes de continuar
 }
 $progressAudio.oninput = () => {
-    localStorage.setItem("newTimeAudio", $progressAudio.value.toString());
+    $audio.currentTime = $progressAudio.value;
+}
+
+$audio.ontimeupdate = () => {
+    const $duration = document.querySelector("#duration");
+    const $currentTime = document.querySelector("#current-time");
+    $currentTime.innerHTML = `${formateTime($audio.currentTime/60)}:${formateTime($audio.currentTime%60)}`;
+    $progressAudio.value = $audio.currentTime;
+
+    if($currentTime.innerHTML === $duration.innerHTML) {
+        $play.classList.remove("remove");
+        $pause.classList.add("remove");
+    }
+    if($audio.currentTime === $audio.duration) {
+        const modeLocal = JSON.parse(localStorage.getItem("modeAudio"));
+        if(modeLocal && modeLocal.mode !== 'disabled') {
+            if(modeLocal.mode === 'repeat') {
+                localStorage.setItem("nextFileAudio", 'true');
+            }
+            else if(modeLocal.mode === 'repeat-one') {
+                $audio.currentTime = 0;
+                $audio.play();
+            }
+            else {
+                stopAudio();
+            }
+        }
+        else {
+            stopAudio();
+        }
+    }
 }
 
 // Controle do volume
 $progressAudioVolume.oninput = () => {
-    const volume = $progressAudioVolume.value;
-    setVolume(volume);
+    setVolume();
 }
-function setVolume(volume) {
+function setVolume() {
+    const volume = $progressAudioVolume.value;
     iconVolume(volume);
+    $audio.volume = parseFloat(parseInt(volume) / 10);
+    $progressAudioVolume.value = volume    
     localStorage.setItem("volumeAudio", volume.toString());
-    $progressAudioVolume.value = volume
 }
 function setVolumeLocal() {
     const volume = localStorage.getItem("volumeAudio");
     if(volume) {
-        iconVolume(parseInt(volume));
         $progressAudioVolume.value = parseInt(volume);
+        setVolume();
     }
 }
 setVolumeLocal();
@@ -231,29 +233,6 @@ function iconVolume(volume) {
         $up.classList.remove("remove");
     }
 }
-
-// Controle de eventos storage
-window.addEventListener("storage", (event) => {
-    const { newValue, key } = event;
-    if(key === 'timeAudio') {
-        const $duration = document.querySelector("#duration");
-        const $currentTime = document.querySelector("#current-time");
-        $currentTime.innerHTML = `${formateTime(newValue/60)}:${formateTime(newValue%60)}`;
-        $progressAudio.value = newValue;
-
-        if($currentTime.innerHTML === $duration.innerHTML) {
-            $play.classList.remove("remove");
-            $pause.classList.add("remove");
-        }
-    }
-    if(key === 'nextFileAudio') {
-        nextFile();
-        setTimeout(() => {
-            play(true);
-        },200);
-        localStorage.removeItem(key);
-    }
-})
 
 function formateTime(time) {
     time = parseInt(time);
@@ -307,9 +286,13 @@ $modeAudio.onclick = () => nextMode();
 $controls.onclick = (e) => {
     e.stopPropagation();
 }
-$audio.onclick = (e) => {
+$audioBox.onclick = (e) => {
     e.stopPropagation();
 }
 $video.onclick = (e) => {
+    e.stopPropagation();
+}
+
+function propagation(e) {
     e.stopPropagation();
 }

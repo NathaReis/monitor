@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Monitor</title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.1/plyr.css" />
     <link rel="stylesheet" href="./style.css">
 </head>
 <body onload="loadFile()">
@@ -94,13 +95,17 @@
         </fieldset>
     </main>
     
-    <footer onclick="this.classList.toggle('active')">
+    <footer>
         <div id="menu-box"></div>
 
         <div id="media-box">
             <img src="" id="image" class="remove">
 
-            <video src="" id="video" class="remove" controls></video>
+            <video id="video" playsinline controls>
+                <source id="video-source" src="" type="video/mp4">
+            </video>
+
+            <!-- <video src="" id="video" class="remove" controls></video> -->
 
             <article id="audio" class="remove">
                 <div id="image-audio">
@@ -147,7 +152,7 @@
             </article>
         </div>
 
-        <div id="control-box">
+        <div id="control-box" onclick="">
             <article id="image">
                 <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-tv-fill" viewBox="0 0 16 16">
                     <path d="M2.5 13.5A.5.5 0 0 1 3 13h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5M2 2h12s2 0 2 2v6s0 2-2 2H2s-2 0-2-2V4s0-2 2-2"/>
@@ -177,7 +182,9 @@
             </article>
         </div>
     </footer>
+    <audio src="" class="remove"></audio>
 </body>
+<script src="https://cdn.plyr.io/3.7.1/plyr.js"></script>
 <script src="../../services/theme.js"></script>
 <script src="../../services/control.js"></script>
 <script src="./script.js"></script>
