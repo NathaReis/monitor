@@ -131,7 +131,7 @@ footer {
             max-width: 1000px;
             max-height: calc(100vh - (var(--headerSize)*2) - var(--footerSize) - 50px);
             background-color: #000;
-            border-radius: 20px;
+            border-radius: 10px;
             cursor: default;
         }
         #image {

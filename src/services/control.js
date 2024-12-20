@@ -44,17 +44,7 @@ function setControl(control) {
                 localStorage.removeItem("videoTime");
                 break 
             case 'video':
-                const player = new Plyr('#video');
-                const videoSource = document.querySelector("#video-source");
-
-                videoSource.src = file.path;
-                player.source = {
-                  type: 'video',
-                    sources: [{
-                        src: file.path,
-                        type: 'video/mp4'
-                    }]
-                }
+                $video.src = file.path;
 
                 if(active) {
                     document.querySelector("footer").classList.add("active");
