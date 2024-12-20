@@ -1,40 +1,31 @@
 const $listFolder = document.querySelector("#list-folder");
-const category = new URLSearchParams(location.search).get('category');
 
-async function loadFile(sync) {
-    try {        
-        const files = await getFiles(sync);
-        if(files) {
-            const $categoryHeader = document.querySelector("#category-header");
-            $categoryHeader.innerHTML = category + '/';
-            $categoryHeader.href = `./index.html?category=${category}`;
-            renderFolders(files);
-        }
-    }
-    catch (error) {
-        console.error(error);
-    }
-}
-
-async function getFiles(sync) {
+async function getFilesCategories(sync) {
     try {
         $listFolder.innerHTML = '';
-        sync ? localStorage.removeItem(category) : null; // remove cache para atualizar
-        const localFiles = JSON.parse(localStorage.getItem(category)); // busca o cache
-        const files = localFiles ? localFiles : await api.getFiles(category); // se o cache existir usa ele se não busca do sistema
-        !localFiles ? localStorage.setItem(category, JSON.stringify(files)) : null; // se o cache não existe cria ele
-        return files;
+        const localFiles = JSON.parse(localStorage.getItem('files')); // busca o cache
+        if(sync || !localFiles) {
+            const files = await api.getFiles();
+            localStorage.setItem('files', JSON.stringify(files))
+            const category = sessionStorage.getItem("category");
+            if(category) {
+                renderFolders(files[category]);
+            }
+            return files;
+        }
+        
+        return localFiles;
     }
     catch (error) {
-        throw error;
+        throw {error: error, from: 'getFiles'};
     }
 }
 
-function renderFolders(files) {
-    for(let folder in files) {
+function renderFolders(foldersByCategory) {
+    for(let folder in foldersByCategory) {
         const box = document.createElement("div");
         box.classList.add("box");
-        box.onclick = () => location = `./index.html?category=${category}&folder=${folder}`;
+        box.onclick = () => setFiles(foldersByCategory[folder]) // Entrando na pasta
 
         const svg = 
             `<div class="box-svg">
@@ -44,33 +35,16 @@ function renderFolders(files) {
             </div>`;
         box.innerHTML += svg;
 
-        const h1 = document.createElement("h1");
-        h1.classList.add("titleFolder");
-        h1.innerHTML = folder;
-        box.appendChild(h1);
+        const title = document.createElement("div");
+        title.innerHTML = folder;
+        box.appendChild(title);
 
-        const qtd = document.createElement("h1");
-        qtd.innerHTML = `(${files[folder].length})`;
-        box.appendChild(qtd);
+        const size = document.createElement("div");
+        size.classList.add("size");
+        size.innerHTML = `(${foldersByCategory[folder].length})`;
+        box.appendChild(size);
 
         $listFolder.appendChild(box);
-    }
-    setFolder(files);
-}
-
-function setFolder(files) {
-    const folder = new URLSearchParams(location.search).get('folder');
-    if(folder) {
-        const $boxes = document.querySelectorAll(".box");
-        for(let box of $boxes) {
-            if(box.querySelector("h1").innerHTML === folder) {
-                const $folderHeader = document.querySelector("#folder-header");
-                $folderHeader.innerHTML = folder + '/';
-                $folderHeader.href = `./index.html?category=${category}&folder=${folder}`;
-                setFiles(files[folder]);
-                break;
-            }
-        }
     }
 }
 
@@ -85,7 +59,7 @@ function setFiles(files) {
         }
 
         let svg;
-        switch(category) {
+        switch(file.category) {
             case 'video': 
                 svg = 
                     `<div class="box-svg">
@@ -142,21 +116,29 @@ function setFiles(files) {
         }
         box.innerHTML += svg;
 
-        const h1 = document.createElement("h1");
-        const lengthName = 20;
+        
+        const title = document.createElement("div");
+        const lengthName = 15;
         const name = file.name.length >= lengthName ? file.name.slice(0,lengthName)+'... ' : file.name;
-        h1.innerHTML = name;
-        box.appendChild(h1);
+        title.innerHTML = name;
+        box.appendChild(title);
 
-        const qtd = document.createElement("h1");
-        qtd.classList.add("qtd");
-        qtd.innerHTML = `${file.size} mb`;
-        box.appendChild(qtd);
+        const size = document.createElement("div");
+        size.classList.add("size");
+        size.innerHTML = file.size + '<i>mb</i>';
+        box.appendChild(size);
 
         $listFolder.appendChild(box);
     })
 }
 
-function readFolders(category) {
-    location = './index.html?category='+category;
+async function readFolders(category) {
+    try {
+        const categories = await getFilesCategories();
+        sessionStorage.setItem("category", category);
+        renderFolders(categories[category]);
+    }
+    catch (error) {
+        console.error(error);
+    }
 }

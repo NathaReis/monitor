@@ -1,180 +1,124 @@
 @import url(../../global.css);
-
-#sync {
-    position: absolute;
-    top: calc(var(--headerSize)/2 - 15px);
-    right: 100px;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    background-color: transparent;
-
-    svg {
-        fill: var(--show);
-        width: 30px;
-        height: 30px;
-    }
-}
     
-#list-folder {
+#list {
     width: 50vw;
-    min-height: calc(100vh - (var(--headerSize) + var(--footerSize) + 20vh));
-    max-height: calc(100vh - (var(--headerSize) + var(--footerSize) + 20vh));
-    overflow: hidden auto;
-    display: flex;
-    justify-content: left;
-    flex-wrap: wrap;
-    gap: 50px;
+    height: calc(100vh - (var(--headerSize) + var(--footerSize)));
     padding: 50px;
-    background-color: #0003;
-    border-radius: 20px;
-    margin: 50px;
-    border: none;
+    display: grid;
+    align-items: center;
+    justify-content: center;
 
-    .box {
-        height: 50px;
+    #list-folder {
+        width: calc(50vw - 100px);
+        height: 100%;
+        overflow: hidden auto;
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        flex-basis: 300px;
-        flex-grow: 1;
-        background-color: #ffffff;
-        box-shadow: 0 0 10px #0002;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 50px;
+        background: linear-gradient(45deg, var(--opacity), transparent) ;
         border-radius: 10px;
-        cursor: pointer;
-        padding: 0 10px 0 0;
-        gap: 10px;
-        overflow: hidden;
-
-        .box-svg {
-            min-width: 50px;
-            min-height: 50px;
-            background-color: #eee;
-            display: grid;
+    
+        .box {
+            width: 350px;
+            height: 40px;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            z-index: 2;
+            justify-content: space-between;
+            font-size: 1rem;
+            background-color: #ffffff;
+            border-radius: 7px;
+            overflow: hidden;
+            cursor: pointer;
 
-            svg {
-                width: 25px;
-                fill: var(--primary);
+            .box-svg {
+                min-width: 40px;
+                height: 40px;
+                background-color: #eee;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                svg {
+                    width: 20px; 
+                    fill: var(--primary);
+                }
+            }
+
+            .size {
+                min-width: 40px;
+
+                i {
+                    font-size: .4rem;
+                    margin-right: 10px;
+                }
             }
         }
-        
-        h1 {
-            z-index: 1;
-            margin-left: 15px;
-            font-size: .9rem;
-        }
-        h1.titleFolder {
-            max-width: 200px;
-            overflow: hidden;
-        }
-        h1.qtd {
-            font-size: .7rem;
-        }
     }
-
-    .box:hover {
-        background-color: #eeeeee;
-        box-shadow: 0 0 10px #0002, 0 0 20px #0002, 0 0 50px #0002;
-
-        .box-svg {
-            background-color: #ddd;
-        }
-    }
-}
-
-#list-folder::-webkit-scrollbar {
-    width: 12px;               /* width of the entire scrollbar */
-}
-
-#list-folder::-webkit-scrollbar-track {
-    background: var(--primary);        /* color of the tracking area */
-}
-
-#list-folder::-webkit-scrollbar-thumb {
-    background-color: var(--show);    /* color of the scroll thumb */
-    border-radius: 5px;       /* roundness of the scroll thumb */
-    border: 3px solid var(--primary);  /* creates padding around scroll thumb */
 }
 
 /* Nav */
 #nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 30px;
-    width: 50dvw;
-    max-width: 500px;
+    width: 50vw;
+    height: calc(100vh - (var(--headerSize) + var(--footerSize)));
     padding: 50px;
-    border-radius: 30px;
-    background-color: var(--background);
-    box-shadow: 10px 10px 15px #0003;
-    border: none;
-    margin: 50px;
+    display: grid;
 
-    .category, .folder {
-        position: relative;
-        width: 70px;
-        height: 70px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px #0003;
-        cursor: pointer;
-        display: grid;
+    #nav-folder {
+        height: 160px;
+        display: flex;
         align-items: center;
         justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: var(--primary-transparent);
+        overflow: hidden auto;
+        box-shadow: 1rem 1rem 2rem #0003;
 
-        svg {
-            width: 25px;
-            fill: var(--primary);
-        }
-
-        span {
-            position: absolute;
-            max-width: 70px;
-            height: 20px;
-            font-size: 10px;
-            left: 0;
-            bottom: -20px;
-            display: grid;
+        .category {
+            position: relative;
+            min-width: 200px;
+            height: 45px;
+            flex-basis: 200px;
+            flex-grow: 1;
+            background-color: #fff;
+            border-radius: 7px;
+            cursor: pointer;
+            display: flex;
             align-items: center;
             justify-content: center;
-            letter-spacing: 2px;
-            overflow: hidden;
+            gap: 13px;
+        
+        
+            svg {
+                width: 20px;
+                fill: var(--primary);
+            }
+        }
+        .category:hover, .folder:hover {
+            opacity: .9;
+            svg {
+                fill: var(--opacity);
+            }
         }
     }
-    .category:hover, .folder:hover {
-        opacity: .7;
 
-        svg {
-            fill: var(--show);
-        }
-    }
+    #control-files {
+        width: calc(50vw - 100px);
+        height: calc(100vh - (var(--headerSize) + var(--footerSize) + 160px + 100px + 50px));
+        margin-top: 50px;
+        border-radius: 10px;
+        background: linear-gradient(45deg, var(--opacity), transparent) ;
 
-    .category {
-        background-color: #fff;
-    }
-    .folder.empty {
-        border: 1px dashed var(--primary);
-        background-color: #0004;
-
-        .full-icon {
-            display: none;
-        }
-        .empty-icon {
-            display: block;
-        }
-    }
-    .folder.full {
-        background-color: #fff;
-
-        .full-icon {
-            display: block;
-        }
-        .empty-icon {
-            display: none;
-        }
+        display: flex;
+        align-items: start;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+        padding: 20px;
+        overflow: hidden auto;
     }
 }

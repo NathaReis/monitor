@@ -17,6 +17,13 @@ async function getFiles(category) {
         });
         const files = await Promise.all(promises);
         
+        if(category === 'all') {
+            const foldersByCategory = {};
+            for(let extensionField in extensions) {
+                foldersByCategory[extensionField] = getFilesByFolder(folders, files, extensionField);
+            }
+            return foldersByCategory;
+        }
         return getFilesByFolder(folders, files, category);
     }
     catch (error) {
@@ -39,7 +46,7 @@ function readFiles(folder, category) {
                         path: fullPath,
                         extension: extname,
                         size: (stats.size / (1024 ** 2)).toFixed(2), // mb
-                        category
+                        category: getCategoryByExtension(extname)
                     };
                 }
                 return 'folder';
@@ -48,6 +55,15 @@ function readFiles(folder, category) {
             resolve(isFiles);
         });
     })
+}
+
+function getCategoryByExtension(extension) {
+    for(let type in extensions) {
+        if(extensions[type].includes(extension)) {
+            return type;
+        }
+    }
+    return 'undefined';
 }
 
 function getFilesByFolder(folders, files, category) {

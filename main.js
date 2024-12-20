@@ -6,7 +6,7 @@ app.on('ready', () => {
     const monitors = createWindow();
 
     // Comunicações >>>>>>>>>>>>>>>>>
-    ipcMain.handle('getFiles', async (event, category='video') => {
+    ipcMain.handle('getFiles', async (event, category) => {
         try {
             return await getFiles(category);
         }
