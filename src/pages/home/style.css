@@ -1,61 +1,16 @@
 @import url(../../global.css);
     
-#list {
-    width: 50vw;
-    height: calc(100vh - (var(--headerSize) + var(--footerSize)));
+#control-files {
+    width: calc(50vw - 100px);
+    height: calc(100vh - (var(--headerSize) + var(--footerSize) + 100px));
     padding: 50px;
+    margin: 50px;
     display: grid;
     align-items: center;
     justify-content: center;
-
-    #list-folder {
-        width: calc(50vw - 100px);
-        height: 100%;
-        overflow: hidden auto;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 20px;
-        padding: 50px;
-        background: linear-gradient(45deg, var(--opacity), transparent) ;
-        border-radius: 10px;
-    
-        .box {
-            width: 350px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 1rem;
-            background-color: #ffffff;
-            border-radius: 7px;
-            overflow: hidden;
-            cursor: pointer;
-
-            .box-svg {
-                min-width: 40px;
-                height: 40px;
-                background-color: #eee;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                svg {
-                    width: 20px; 
-                    fill: var(--primary);
-                }
-            }
-
-            .size {
-                min-width: 40px;
-
-                i {
-                    font-size: .4rem;
-                    margin-right: 10px;
-                }
-            }
-        }
-    }
+    border-radius: 10px;
+    background-color: var(--transparent-background);
+    box-shadow: 5px 5px 15px #0002, 0 0 10px 10px #0001;
 }
 
 /* Nav */
@@ -80,7 +35,6 @@
 
         .category {
             position: relative;
-            min-width: 200px;
             height: 45px;
             flex-basis: 200px;
             flex-grow: 1;
@@ -105,20 +59,66 @@
             }
         }
     }
+}
 
-    #control-files {
-        width: calc(50vw - 100px);
-        height: calc(100vh - (var(--headerSize) + var(--footerSize) + 160px + 100px + 50px));
-        margin-top: 50px;
-        border-radius: 10px;
-        background: linear-gradient(45deg, var(--opacity), transparent) ;
+#list {
+    width: calc(50vw - 100px);
+    height: calc(100vh - (var(--headerSize) + var(--footerSize) + 160px + 100px + 50px));
+    margin-top: 50px;
+    border-radius: 10px;
+    background-color: var(--primary-transparent);
 
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 20px;
+    overflow: hidden auto;
+}
+
+#list-folder {
+    width: 100%;
+    height: 100%;
+    overflow: hidden auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .box {
+        width: 350px;
+        height: 50px;
         display: flex;
-        align-items: start;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 30px;
-        padding: 20px;
-        overflow: hidden auto;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 1rem;
+        background-color: #ffffff;
+        border-radius: 7px;
+        overflow: hidden;
+        cursor: pointer;
+
+        .box-svg {
+            min-width: 50px;
+            height: 50px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                width: 20px; 
+                fill: var(--primary);
+            }
+        }
+
+        .size {
+            min-width: 50px;
+
+            i {
+                font-size: .4rem;
+                margin-right: 10px;
+            }
+        }
     }
 }

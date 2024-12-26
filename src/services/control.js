@@ -2,15 +2,12 @@
 const $title = document.querySelector("#title");
 const $image = document.querySelector("#image");
 const $video = document.querySelector("#video");
-const $audioBox = document.querySelector("#audio");
-const $audio = document.querySelector("audio");
-const $play = document.querySelector("#play");
-const $pause = document.querySelector("#pause");
-const $stop = document.querySelector("#stop");
+const $audio = document.querySelector("#audio");
+
+// const $play = document.querySelector("#play");
+// const $pause = document.querySelector("#pause");
+// const $stop = document.querySelector("#stop");
 // const $controls = document.querySelector("#controls");
-const $modeAudio = document.querySelector("#mode-audio");
-const $progressAudio = document.querySelector("#progress-audio");
-const $progressAudioVolume = document.querySelector("#progress-audio-volume");
 
 function setControl(control) {
     if(control) {
@@ -26,55 +23,31 @@ function setControl(control) {
                     e.stopPropagation();
                     $image.classList.toggle("full");
                 }
-
-                if(active) {
-                    document.querySelector("footer").classList.add("active");
-                }
-                // Habilitar visualização da imagem - Desabilitar visualização de vídeo e áudio
-                $image.classList.remove("remove");
-                $video.classList.add("remove");
-                $audioBox.classList.add("remove");
-
-                // $stop.classList.add("remove");
-                // $play.classList.add("remove");
-                // $pause.classList.add("remove");
-                // document.querySelector("#controls").classList.remove("remove");
-                // Limpando storage de vídeo
-                localStorage.removeItem("videoPlay");
-                localStorage.removeItem("videoTime");
+                toggleBox([$image],[$audio, $video]);
                 break 
             case 'video':
                 $video.src = file.path;
-
-                if(active) {
-                    document.querySelector("footer").classList.add("active");
-                }
-                // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
-                $video.classList.remove("remove");
-                $image.classList.add("remove");
-                $audioBox.classList.add("remove");
-
-                // document.querySelector("#controls").classList.add("remove");
+                toggleBox([$video],[$audio, $image]);
                 break 
             case 'audio':  
-                defineDuration();
-                // $stop.classList.remove("remove");
                 $audio.src = file.path;
-                // Habilitar visualização da vídeo - Desabilitar visualização de imagem e áudio
-                $audioBox.classList.remove("remove");
-                $video.classList.add("remove");
-                $image.classList.add("remove");
-                // document.querySelector("#controls").classList.remove("remove");
-                // Limpando storage de vídeo
-                localStorage.removeItem("videoPlay");
-                localStorage.removeItem("videoTime");
+                toggleBox([$audio],[$video, $image]);
                 break
+        }
+
+        if(active) {
+            document.querySelector("footer").classList.add("active");
         }
     
         localStorage.setItem("control", JSON.stringify({file, files, index}));
     }
 }
 setControl(JSON.parse(localStorage.getItem("control")));
+
+function toggleBox(active, disble) {
+    active.map(ac => ac.classList.remove("remove"));
+    disble.map(ds => ds.classList.add("remove"));
+}
 
 function backFile() {
     const controlLocal = JSON.parse(localStorage.getItem("control"));
@@ -132,157 +105,6 @@ function play(active) {
 // $play.onclick = () => play(true);
 // $pause.onclick = () => play(false);
 
-// RENDER AUDIO
-function defineDuration() {
-    const $duration = document.querySelector("#duration");
-    const durationLocal = $audio.duration.toFixed(2);
-    $duration.innerHTML = `${formateTime(durationLocal/60)}:${formateTime(durationLocal%60)}`;
-    $progressAudio.max = durationLocal;
-}
-
-$progressAudio.onmousedown = () => {
-    play(false);
-}
-$progressAudio.onmouseup = () => {
-    setTimeout(() => {
-        play(true);
-    },200);// Esperar para renderizar o novo valor de tempo antes de continuar
-}
-$progressAudio.oninput = () => {
-    $audio.currentTime = $progressAudio.value;
-}
-
-$audio.ontimeupdate = () => {
-    const $duration = document.querySelector("#duration");
-    const $currentTime = document.querySelector("#current-time");
-    $currentTime.innerHTML = `${formateTime($audio.currentTime/60)}:${formateTime($audio.currentTime%60)}`;
-    $progressAudio.value = $audio.currentTime;
-
-    if($currentTime.innerHTML === $duration.innerHTML) {
-        // $play.classList.remove("remove");
-        // $pause.classList.add("remove");
-    }
-    if($audio.currentTime === $audio.duration) {
-        const modeLocal = JSON.parse(localStorage.getItem("modeAudio"));
-        if(modeLocal && modeLocal.mode !== 'disabled') {
-            if(modeLocal.mode === 'repeat') {
-                localStorage.setItem("nextFileAudio", 'true');
-            }
-            else if(modeLocal.mode === 'repeat-one') {
-                $audio.currentTime = 0;
-                $audio.play();
-            }
-            else {
-                stopAudio();
-            }
-        }
-        else {
-            stopAudio();
-        }
-    }
-}
-
-// Controle do volume
-$progressAudioVolume.oninput = () => {
-    setVolume();
-}
-function setVolume() {
-    const volume = $progressAudioVolume.value;
-    iconVolume(volume);
-    $audio.volume = parseFloat(parseInt(volume) / 10);
-    $progressAudioVolume.value = volume    
-    localStorage.setItem("volumeAudio", volume.toString());
-}
-function setVolumeLocal() {
-    const volume = localStorage.getItem("volumeAudio");
-    if(volume) {
-        $progressAudioVolume.value = parseInt(volume);
-        setVolume();
-    }
-}
-setVolumeLocal();
-
-function iconVolume(volume) {
-    const $mute = document.querySelector("#volume-audio-mute");
-    const $down = document.querySelector("#volume-audio-down");
-    const $up = document.querySelector("#volume-audio-up");
-
-    if(volume == 0) {
-        $mute.classList.remove("remove");
-        $down.classList.add("remove");
-        $up.classList.add("remove");
-    }
-    else if(volume < 6) {
-        $mute.classList.add("remove");
-        $down.classList.remove("remove");
-        $up.classList.add("remove"); 
-    }
-    else {
-        $mute.classList.add("remove");
-        $down.classList.add("remove");
-        $up.classList.remove("remove");
-    }
-}
-
-function formateTime(time) {
-    time = parseInt(time);
-    return time < 10 ? `0${(time)}` : time;
-}
-
-// Mode
-const modeData = [
-    {
-        icon: $modeAudio.querySelector("#mode-disabled"),
-        action: () => {
-            localStorage.setItem("modeAudio", JSON.stringify({index: 0, mode: 'disabled'}));
-        }
-    },
-    {
-        icon: $modeAudio.querySelector("#mode-repeat"),
-        action: () => {
-            localStorage.setItem("modeAudio", JSON.stringify({index: 1, mode: 'repeat'}))
-        }
-    },    
-    {
-        icon: $modeAudio.querySelector("#mode-repeat-one"),
-        action: () => {
-            localStorage.setItem("modeAudio", JSON.stringify({index: 2, mode: 'repeat-one'}));
-        }
-    }
-]
-function setMode(modeIndex) {
-    if(!modeIndex) {
-        modeIndex = 0;
-    }
-    const allIcons = $modeAudio.querySelectorAll("svg");
-    allIcons.forEach(icon => icon.classList.add("remove"));
-
-    modeData[modeIndex].icon.classList.remove("remove");
-    modeData[modeIndex].action();
-}
-// setMode(JSON.parse(localStorage.getItem("modeAudio"))?.index);
-
-function nextMode() {
-    let nextModeIndex = JSON.parse(localStorage.getItem("modeAudio")).index;
-    if(++nextModeIndex === modeData.length) {
-        nextModeIndex = 0;
-    }
-    setMode(nextModeIndex);
-}
-
-$modeAudio.onclick = () => nextMode();
-
-// Desativar toggle do footer ao clicar no contol
-// $controls.onclick = (e) => {
-//     e.stopPropagation();
-// }
-$audioBox.onclick = (e) => {
-    e.stopPropagation();
-}
-$video.onclick = (e) => {
-    e.stopPropagation();
-}
-
-function propagation(e) {
-    e.stopPropagation();
+function toggleFooter() {
+    document.querySelector('footer').classList.toggle('active');
 }

@@ -15,7 +15,9 @@
     --txtBG: #ffffff;
     --transparent-background: #fff1;
     --headerSize: 35px;
+    --headerBG: #0006;
     --footerSize: 80px;
+    --footerBG: #fff3;
     --primary: #591C21;
     --primary-transparent: #591c21d7;
     --show: #D92525;
@@ -26,6 +28,7 @@
     --background: #ebebeb;
     --txtBG: #000000;
     --transparent-background: #0001;
+    --footerBG: #0003;
     --primary: #0097d3;
     --primary-transparent: #0097d377;
     --show: #00ffff;
@@ -54,7 +57,7 @@ body {
 header {
     width: 100vw;
     height: var(--headerSize);
-    background-color: var(--transparent-background);
+    background-color: var(--headerBG);
     display: flex;
     align-items: center;
     justify-content: left;
@@ -69,7 +72,7 @@ header {
         background-color: transparent;
         border: none;
         outline: none;
-        color: var(--txtBG);
+        color: #ffffff;
         padding: 0 10px;
         text-transform: uppercase;
     }
@@ -96,11 +99,19 @@ footer {
     cursor: pointer;
     overflow: hidden;
 
+    #close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        cursor: pointer;
+        display: none;
+    }
+
     #media-box {
         width: 100vw;
         height: 0;
         transition: .3s;
-        background-color: var(--footer-transparent);
+        background-color: var(--footerBG);
         display: grid;
         align-items: center;
         justify-content: center;
@@ -133,104 +144,6 @@ footer {
             min-height: 100vh;
             border-radius: 0;
             cursor: zoom-out;
-        }
-
-        #audio {
-            height: calc(100vh - var(--headerSize) - var(--footerSize) - 100px);
-            max-height: 500px;
-            padding: 20px;
-            border-radius: 30px;
-            display: grid;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--background);
-
-            #image-audio {
-                max-width: 400px;
-                width: 60vw;
-                display: grid;
-                align-items: center;
-                justify-content: center;
-
-                svg {
-                    width: 250px;
-                    fill: var(--primary-transparent);
-                }
-            }
-
-            
-            #progress-audio-box {
-                position: relative;
-                max-width: 400px;
-                width: 60vw;
-                display: grid;
-                align-items: center;
-                justify-content: center;
-                
-                input {
-                    max-width: 350px;
-                    width: 55vw;
-                    padding: 10px;
-                    cursor: pointer;
-                }
-                
-                span {
-                    position: absolute;
-                    left: 0;
-                    top: -1rem;
-                    height: 1rem;
-                    color: var(--txtBG);
-                }
-                span#duration {
-                    right: 0;
-                    left: auto;
-                }
-            }
-
-            .buttons {
-                max-width: 400px;
-                width: 60vw;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-
-            #audio-volume-box {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 20px;
-                width: 30vw;
-                max-width: 300px;
-
-                button {
-                    cursor: default;
-                }
-
-                input {
-                    width: 100%;
-                    cursor: pointer;
-                }
-            }
-
-            button {
-                background-color: var(--transparent-background);
-                border: none;
-                outline: none;
-                border: 2px solid var(--show);
-                cursor: pointer;
-                padding: 10px;
-                border-radius: 50%;
-
-                svg {
-                    width: 25px;
-                    fill: var(--primary);
-                }
-
-                svg.disabled {
-                    opacity: .3;
-                }
-            }
         }
     }
 
@@ -270,6 +183,10 @@ footer {
 footer.active {
     height: calc(100vh - var(--headerSize));
     
+    #close {
+        display: block;
+    }
+
     #media-box {
         height: calc(100vh - var(--headerSize) - var(--footerSize));
     }
